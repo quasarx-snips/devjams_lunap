@@ -17,7 +17,7 @@
             background-color: #05050a;
             color: #ffffff;
             height: 100vh;
-            overflow: hidden; /* Ensure no scroll is needed */
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -121,7 +121,6 @@
             width: 100%;
         }
 
-        /* LunaP Title with overlapping characters */
         .lunap-title {
             font-size: clamp(8rem, 25vw, 24rem); 
             font-weight: 900;
@@ -133,7 +132,7 @@
             position: relative;
             z-index: 20;
             margin: 0;
-            pointer-events: none; /* Let clicks pass through the container to the icons */
+            pointer-events: none;
         }
 
         .char {
@@ -144,13 +143,12 @@
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, text-shadow 0.3s ease;
             cursor: default;
             margin-right: -0.06em;
-            pointer-events: auto; /* Re-enable pointer events for individual letters */
+            pointer-events: auto;
         }
         .char:last-child {
             margin-right: 0;
         }
 
-        /* Theme-suited interactive hover colors for each character */
         .char:nth-child(1):hover { color: #a855f7; text-shadow: 0 0 25px rgba(168, 85, 247, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(-3deg); z-index: 25; }
         .char:nth-child(2):hover { color: #3b82f6; text-shadow: 0 0 25px rgba(59, 130, 246, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(3deg); z-index: 25; }
         .char:nth-child(3):hover { color: #8b5cf6; text-shadow: 0 0 25px rgba(139, 92, 246, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(-2deg); z-index: 25; }
@@ -163,7 +161,7 @@
             justify-content: center;
             flex-wrap: nowrap;
             z-index: 10;
-            margin-top: clamp(-100px, -14vw, -200px); /* Deepened text overlap for massive text */
+            margin-top: clamp(-100px, -14vw, -200px);
             width: 100%;
             max-width: 1400px;
         }
@@ -174,40 +172,39 @@
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
             cursor: pointer;
             filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
-            aspect-ratio: 1/1; /* Forces strict square box to prevent stretching */
+            aspect-ratio: 1/1;
         }
 
-        /* Enforce robust tight overlap (removes flex gap unreliability) */
         .space-icon:not(:first-child) {
             margin-left: clamp(-60px, -9vw, -125px);
         }
 
-        /* Staggered vertical offsets and rotations mimicking DevJams cluster - Scaled up */
-        .space-icon:nth-child(1) { transform: translateY(10px) rotate(-4deg); z-index: 4; }
-        .space-icon:nth-child(2) { transform: translateY(65px) scale(1.15) rotate(2deg); z-index: 3; } /* Moon is positioned larger and lower */
-        .space-icon:nth-child(3) { transform: translateY(-20px) rotate(-2deg); z-index: 2; }
-        .space-icon:nth-child(4) { transform: translateY(30px) rotate(4deg); z-index: 1; }
+        /* Satellite (1) and Rover (3) share the exact same Y axis offset and pushed further down */
+        .space-icon:nth-child(1) { transform: translateY(85px) rotate(-4deg); z-index: 4; }
+        .space-icon:nth-child(2) { transform: translateY(50px) scale(1.15) rotate(2deg); z-index: 3; }
+        .space-icon:nth-child(3) { transform: translateY(85px) scale(1.1) rotate(-2deg); z-index: 2; }
+        .space-icon:nth-child(4) { transform: translateY(40px) rotate(4deg); z-index: 1; }
 
-        .space-icon:nth-child(1):hover { transform: translateY(-15px) scale(1.1) rotate(-4deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
-        .space-icon:nth-child(2):hover { transform: translateY(40px) scale(1.25) rotate(2deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
-        .space-icon:nth-child(3):hover { transform: translateY(-45px) scale(1.1) rotate(-2deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
-        .space-icon:nth-child(4):hover { transform: translateY(5px) scale(1.1) rotate(4deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
+        .space-icon:nth-child(1):hover { transform: translateY(65px) scale(1.1) rotate(-4deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
+        .space-icon:nth-child(2):hover { transform: translateY(30px) scale(1.25) rotate(2deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
+        .space-icon:nth-child(3):hover { transform: translateY(65px) scale(1.2) rotate(-2deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
+        .space-icon:nth-child(4):hover { transform: translateY(20px) scale(1.1) rotate(4deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
         
         @keyframes jumpBounce1 {
-            0%, 100% { transform: translateY(10px) scale(1) rotate(-4deg); }
-            50% { transform: translateY(-15px) scale(1.06) rotate(-8deg); }
+            0%, 100% { transform: translateY(85px) scale(1) rotate(-4deg); }
+            50% { transform: translateY(60px) scale(1.06) rotate(-8deg); }
         }
         @keyframes jumpBounce2 {
-            0%, 100% { transform: translateY(65px) scale(1.15) rotate(2deg); }
-            50% { transform: translateY(35px) scale(1.2) rotate(0deg); }
+            0%, 100% { transform: translateY(50px) scale(1.15) rotate(2deg); }
+            50% { transform: translateY(25px) scale(1.2) rotate(0deg); }
         }
         @keyframes jumpBounce3 {
-            0%, 100% { transform: translateY(-20px) scale(1) rotate(-2deg); }
-            50% { transform: translateY(-50px) scale(1.08) rotate(-6deg); }
+            0%, 100% { transform: translateY(85px) scale(1.1) rotate(-2deg); }
+            50% { transform: translateY(60px) scale(1.18) rotate(-6deg); }
         }
         @keyframes jumpBounce4 {
-            0%, 100% { transform: translateY(30px) scale(1) rotate(4deg); }
-            50% { transform: translateY(0px) scale(1.06) rotate(2deg); }
+            0%, 100% { transform: translateY(40px) scale(1) rotate(4deg); }
+            50% { transform: translateY(15px) scale(1.06) rotate(2deg); }
         }
 
         .space-icon.jumping:nth-child(1) { animation: jumpBounce1 0.42s ease-in-out infinite; }
@@ -324,7 +321,7 @@
             </h1>
 
             <div class="icons-row">
-                <!-- 1. Satellite Icon -->
+                <!-- 1. Satellite Icon (Static Lenses, No Lasers) -->
                 <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="smoothGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -333,24 +330,29 @@
                             <stop offset="100%" stop-color="#2563eb" />
                         </linearGradient>
                     </defs>
-                    <rect x="8" y="38" width="28" height="24" rx="6" fill="url(#smoothGrad1)" opacity="0.9" />
-                    <line x1="15" y1="38" x2="15" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    <line x1="22" y1="38" x2="22" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    <line x1="29" y1="38" x2="29" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <rect x="4" y="38" width="30" height="24" rx="6" fill="url(#smoothGrad1)" opacity="0.9" />
+                    <line x1="11" y1="38" x2="11" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <line x1="18" y1="38" x2="18" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <line x1="25" y1="38" x2="25" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
                     
-                    <rect x="64" y="38" width="28" height="24" rx="6" fill="url(#smoothGrad1)" opacity="0.9" />
-                    <line x1="71" y1="38" x2="71" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    <line x1="78" y1="38" x2="78" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    <line x1="85" y1="38" x2="85" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <rect x="66" y="38" width="30" height="24" rx="6" fill="url(#smoothGrad1)" opacity="0.9" />
+                    <line x1="73" y1="38" x2="73" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <line x1="80" y1="38" x2="80" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <line x1="87" y1="38" x2="87" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
 
-                    <rect x="36" y="32" width="28" height="36" rx="8" fill="url(#smoothGrad1)" />
-                    <rect x="42" y="38" width="16" height="12" rx="3" fill="#05050a" opacity="0.6"/>
-                    <circle cx="50" cy="58" r="4" fill="#00ffcc"/>
-                    <path d="M42 22C42 16 58 16 58 22" fill="url(#smoothGrad1)" />
-                    <line x1="50" y1="22" x2="50" y2="32" stroke="#9333ea" stroke-width="3" stroke-linecap="round"/>
-                    <circle cx="50" cy="20" r="2.5" fill="#ff2a6d"/>
-                    <path d="M40 68L34 82M60 68L66 82" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
-                    <path d="M47 68V76M53 68V76" stroke="#ff2a6d" stroke-width="2.5" stroke-linecap="round"/>
+                    <rect x="34" y="30" width="32" height="40" rx="8" fill="url(#smoothGrad1)" />
+                    
+                    <rect x="38" y="36" width="24" height="18" rx="5" fill="#05050a" stroke="#7c3aed" stroke-width="2" opacity="0.95"/>
+                    <circle cx="45" cy="45" r="4.5" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.2"/>
+                    <circle cx="55" cy="45" r="4.5" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.2"/>
+                    
+                    <circle cx="45" cy="45" r="2.5" fill="#00ffcc" />
+                    <circle cx="55" cy="45" r="2.5" fill="#00ffcc" />
+
+                    <path d="M50 16v14" stroke="#9333ea" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="50" cy="14" r="3" fill="#ff2a6d"/>
+                    <path d="M40 70L34 84M60 70L66 84" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M47 70V78M53 70V78" stroke="#ff2a6d" stroke-width="2.5" stroke-linecap="round"/>
                 </svg>
 
                 <!-- 2. Moon Icon -->
@@ -370,7 +372,34 @@
                     <circle cx="28" cy="58" r="4" fill="#05050a" opacity="0.35"/>
                 </svg>
 
-                <!-- 3. Lander Icon -->
+                <!-- 3. Rover Icon with Laser Tracking Eyes -->
+                <svg class="space-icon" id="lander-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="smoothGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3b0764" />
+                            <stop offset="50%" stop-color="#7e22ce" />
+                            <stop offset="100%" stop-color="#2563eb" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M22 54L32 36H68L78 54H85V72H15V54H22Z" fill="url(#smoothGrad4)" stroke-linejoin="round"/>
+                    <rect x="24" y="16" width="52" height="24" rx="12" fill="#05050a" stroke="#7e22ce" stroke-width="2.5" opacity="0.95"/>
+                    
+                    <circle id="left-eye-base" cx="40" cy="28" r="7" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.5"/>
+                    <circle id="right-eye-base" cx="60" cy="28" r="7" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.5"/>
+                    
+                    <circle id="left-pupil" cx="40" cy="28" r="4" fill="#ff2a6d" style="transition: fill 0.2s ease, filter 0.2s ease;" />
+                    <circle id="right-pupil" cx="60" cy="28" r="4" fill="#ff2a6d" style="transition: fill 0.2s ease, filter 0.2s ease;" />
+                    
+                    <rect x="40" y="59" width="20" height="8" rx="4" fill="#05050a" opacity="0.6"/>
+                    <circle cx="25" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
+                    <circle cx="50" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
+                    <circle cx="75" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
+                    <circle cx="25" cy="80" r="3.5" fill="#3b82f6"/>
+                    <circle cx="50" cy="80" r="3.5" fill="#3b82f6"/>
+                    <circle cx="75" cy="80" r="3.5" fill="#3b82f6"/>
+                </svg>
+
+                <!-- 4. Lander Icon -->
                 <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="smoothGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -390,39 +419,6 @@
                     <rect x="10" y="88" width="12" height="4" rx="2" fill="#3b82f6"/>
                     <rect x="78" y="88" width="12" height="4" rx="2" fill="#3b82f6"/>
                     <rect x="44" y="88" width="12" height="4" rx="2" fill="#3b82f6"/>
-                </svg>
-
-                <!-- 4. Rover Icon with Interactive Tracking Eyes -->
-                <svg class="space-icon" id="lander-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="smoothGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#3b0764" />
-                            <stop offset="50%" stop-color="#7e22ce" />
-                            <stop offset="100%" stop-color="#2563eb" />
-                        </linearGradient>
-                    </defs>
-                    <!-- Main Body -->
-                    <path d="M22 54L32 36H68L78 54H85V72H15V54H22Z" fill="url(#smoothGrad4)" stroke-linejoin="round"/>
-                    
-                    <!-- Top Head Visor / Eye Enclosure -->
-                    <rect x="24" y="16" width="52" height="24" rx="12" fill="#05050a" stroke="#7e22ce" stroke-width="2.5" opacity="0.95"/>
-                    
-                    <!-- Eye Socket Rings (Anchors for absolute tracking) -->
-                    <circle id="left-eye-base" cx="40" cy="28" r="7" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.5"/>
-                    <circle id="right-eye-base" cx="60" cy="28" r="7" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.5"/>
-                    
-                    <!-- Interactive Tracking Eyes/Pupils -->
-                    <circle id="left-pupil" cx="40" cy="28" r="4" fill="#ff2a6d" style="transition: fill 0.2s ease, filter 0.2s ease;" />
-                    <circle id="right-pupil" cx="60" cy="28" r="4" fill="#ff2a6d" style="transition: fill 0.2s ease, filter 0.2s ease;" />
-                    
-                    <!-- Front Grill & Wheels -->
-                    <rect x="40" y="59" width="20" height="8" rx="4" fill="#05050a" opacity="0.6"/>
-                    <circle cx="25" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
-                    <circle cx="50" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
-                    <circle cx="75" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
-                    <circle cx="25" cy="80" r="3.5" fill="#3b82f6"/>
-                    <circle cx="50" cy="80" r="3.5" fill="#3b82f6"/>
-                    <circle cx="75" cy="80" r="3.5" fill="#3b82f6"/>
                 </svg>
             </div>
         </div>
@@ -446,18 +442,16 @@
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            updateRoverEyes();
+            updateTrackingSensors();
         });
 
-        const landerSvg = document.getElementById('lander-svg');
-        const leftPupil = document.getElementById('left-pupil');
-        const rightPupil = document.getElementById('right-pupil');
+        const roverLeftPupil = document.getElementById('left-pupil');
+        const roverRightPupil = document.getElementById('right-pupil');
+
         const canvas = document.getElementById('laser-canvas');
         const ctx = canvas.getContext('2d');
         const proceedBtn = document.getElementById('proceed-btn');
         const spaceIcons = document.querySelectorAll('.space-icon');
-
-        let currentPupilOffset = { lx: 40, ly: 28, rx: 60, ry: 28 };
 
         proceedBtn.addEventListener('mouseenter', () => {
             spaceIcons.forEach(icon => icon.classList.add('jumping'));
@@ -473,32 +467,25 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        function updateRoverEyes() {
-            const lBaseRect = document.getElementById('left-eye-base').getBoundingClientRect();
-            const rBaseRect = document.getElementById('right-eye-base').getBoundingClientRect();
-            
-            // Abort seamlessly if not fully rendered yet
-            if(lBaseRect.width === 0) return;
+        function updateTrackingSensors() {
+            // Rover tracking
+            const rovLBase = document.getElementById('left-eye-base').getBoundingClientRect();
+            const rovRBase = document.getElementById('right-eye-base').getBoundingClientRect();
+            if(rovLBase.width > 0) {
+                const rlx = rovLBase.left + rovLBase.width / 2;
+                const rly = rovLBase.top + rovLBase.height / 2;
+                const rrx = rovRBase.left + rovRBase.width / 2;
+                const rry = rovRBase.top + rovRBase.height / 2;
 
-            // Get absolute screen centers of the eye sockets
-            const lx = lBaseRect.left + lBaseRect.width / 2;
-            const ly = lBaseRect.top + lBaseRect.height / 2;
-            const rx = rBaseRect.left + rBaseRect.width / 2;
-            const ry = rBaseRect.top + rBaseRect.height / 2;
+                const angleRovL = Math.atan2(mouseY - rly, mouseX - rlx);
+                const angleRovR = Math.atan2(mouseY - rry, mouseX - rrx);
+                const maxDistRov = 2.5;
 
-            const angleLeft = Math.atan2(mouseY - ly, mouseX - lx);
-            const angleRight = Math.atan2(mouseY - ry, mouseX - rx);
-
-            const maxDist = 2.5; // Max offset within the viewBox
-            currentPupilOffset.lx = 40 + Math.cos(angleLeft) * maxDist;
-            currentPupilOffset.ly = 28 + Math.sin(angleLeft) * maxDist;
-            currentPupilOffset.rx = 60 + Math.cos(angleRight) * maxDist;
-            currentPupilOffset.ry = 28 + Math.sin(angleRight) * maxDist;
-
-            leftPupil.setAttribute('cx', currentPupilOffset.lx);
-            leftPupil.setAttribute('cy', currentPupilOffset.ly);
-            rightPupil.setAttribute('cx', currentPupilOffset.rx);
-            rightPupil.setAttribute('cy', currentPupilOffset.ry);
+                roverLeftPupil.setAttribute('cx', 40 + Math.cos(angleRovL) * maxDistRov);
+                roverLeftPupil.setAttribute('cy', 28 + Math.sin(angleRovL) * maxDistRov);
+                roverRightPupil.setAttribute('cx', 60 + Math.cos(angleRovR) * maxDistRov);
+                roverRightPupil.setAttribute('cy', 28 + Math.sin(angleRovR) * maxDistRov);
+            }
         }
 
         let laserPulse = 0;
@@ -513,51 +500,39 @@
 
             const isNearButton = distToBtn < 150 || (mouseX >= btnRect.left - 50 && mouseX <= btnRect.right + 50 && mouseY >= btnRect.top - 50 && mouseY <= btnRect.bottom + 50);
             
-            // Determine active target color
             const laserColor = isNearButton ? '#00ffcc' : '#ff2a6d';
 
-            // Visually sync pupils to current laser mode
-            leftPupil.setAttribute('fill', laserColor);
-            rightPupil.setAttribute('fill', laserColor);
-            leftPupil.style.filter = `drop-shadow(0 0 8px ${laserColor})`;
-            rightPupil.style.filter = `drop-shadow(0 0 8px ${laserColor})`;
+            // Update rover pupil colors & glows
+            [roverLeftPupil, roverRightPupil].forEach(p => {
+                p.setAttribute('fill', laserColor);
+                p.style.filter = `drop-shadow(0 0 8px ${laserColor})`;
+            });
 
-            // Get foolproof screen origins for beams direct from the pupil nodes
-            const lRect = leftPupil.getBoundingClientRect();
-            const rRect = rightPupil.getBoundingClientRect();
+            const rovLRect = roverLeftPupil.getBoundingClientRect();
+            const rovRRect = roverRightPupil.getBoundingClientRect();
             
-            if (lRect.width === 0) {
+            if (rovLRect.width === 0) {
                 requestAnimationFrame(renderLasers);
                 return;
             }
 
-            const startLX = lRect.left + lRect.width / 2;
-            const startLY = lRect.top + lRect.height / 2;
-            const startRX = rRect.left + rRect.width / 2;
-            const startRY = rRect.top + rRect.height / 2;
-
             laserPulse += 0.3;
             const alpha = 0.85 + Math.sin(laserPulse) * 0.15;
 
-            // Left Laser Beam
-            ctx.beginPath();
-            ctx.moveTo(startLX, startLY);
-            ctx.lineTo(mouseX, mouseY);
-            ctx.strokeStyle = isNearButton ? `rgba(0, 255, 204, ${alpha})` : `rgba(255, 42, 109, ${alpha})`;
-            ctx.lineWidth = 2.5;
-            ctx.shadowColor = laserColor;
-            ctx.shadowBlur = 18;
-            ctx.stroke();
-
-            // Right Laser Beam
-            ctx.beginPath();
-            ctx.moveTo(startRX, startRY);
-            ctx.lineTo(mouseX, mouseY);
-            ctx.strokeStyle = isNearButton ? `rgba(0, 255, 204, ${alpha})` : `rgba(255, 42, 109, ${alpha})`;
-            ctx.lineWidth = 2.5;
-            ctx.shadowColor = laserColor;
-            ctx.shadowBlur = 18;
-            ctx.stroke();
+            // Draw Rover Lasers only
+            [
+                {x: rovLRect.left + rovLRect.width/2, y: rovLRect.top + rovLRect.height/2},
+                {x: rovRRect.left + rovRRect.width/2, y: rovRRect.top + rovRRect.height/2}
+            ].forEach(origin => {
+                ctx.beginPath();
+                ctx.moveTo(origin.x, origin.y);
+                ctx.lineTo(mouseX, mouseY);
+                ctx.strokeStyle = isNearButton ? `rgba(0, 255, 204, ${alpha * 0.8})` : `rgba(255, 42, 109, ${alpha * 0.8})`;
+                ctx.lineWidth = 2;
+                ctx.shadowColor = laserColor;
+                ctx.shadowBlur = 18;
+                ctx.stroke();
+            });
 
             // Target Lock Glow at Mouse
             ctx.beginPath();
