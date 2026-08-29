@@ -262,49 +262,94 @@
         /* 1. Satellite Liftoff */
         body.launched .space-icon:nth-child(1) {
             transform: translateY(-130vh) rotate(-15deg) scale(0.75) !important;
-            transition: transform 6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s, filter 6s ease 0.1s !important;
+            transition: transform 3.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s, filter 3.5s ease 0.1s !important;
             filter: drop-shadow(0 40px 20px rgba(168, 85, 247, 0.9)) 
                     drop-shadow(0 90px 45px rgba(255, 42, 109, 0.75)) 
                     drop-shadow(0 150px 70px rgba(124, 58, 237, 0.5)) !important;
         }
 
-        /* 2. Moon Drop, Roll & Scale Sequence Keyframes */
-        @keyframes moonDropRollCenterScale {
+        /* 2. Moon Drop, Roll to Left & Scale Sequence Keyframes */
+        @keyframes moonDropRollLeftScale {
             0% {
                 transform: translateY(50px) scale(1.15) rotate(2deg);
                 filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
             }
-            /* Sudden drop downwards with tilt */
             18% {
-                transform: translate(-10px, 170px) scale(1.05) rotate(-35deg);
+                transform: translate(10px, 170px) scale(1.05) rotate(35deg);
                 filter: drop-shadow(0 30px 20px rgba(0, 0, 0, 0.85));
             }
-            /* Roll across to the horizontal center */
             42% {
-                transform: translate(clamp(30px, 4.5vw, 65px), 140px) scale(1.15) rotate(360deg);
+                transform: translate(clamp(-220px, -22vw, -120px), 140px) scale(1.15) rotate(-360deg);
                 filter: drop-shadow(0 20px 40px rgba(139, 92, 246, 0.7));
             }
-            /* Brief momentum pause */
             50% {
-                transform: translate(clamp(30px, 4.5vw, 65px), 130px) scale(1.2) rotate(370deg);
+                transform: translate(clamp(-220px, -22vw, -120px), 130px) scale(1.2) rotate(-370deg);
             }
-            /* Relocate to exact mid X & Y center of screen while scaling up to fill 90% Y-axis (90vh) */
             100% {
-                transform: translate(clamp(30px, 4.5vw, 65px), clamp(40px, 6vw, 90px)) scale(calc(90vh / clamp(140px, 23vw, 320px))) rotate(720deg);
+                transform: translate(clamp(-240px, -24vw, -130px), clamp(40px, 6vw, 90px)) scale(calc(90vh / clamp(140px, 23vw, 320px))) rotate(-720deg);
                 filter: drop-shadow(0 0 110px rgba(255, 255, 255, 0.85));
                 z-index: 50;
             }
         }
 
         body.launched .space-icon:nth-child(2) {
-            animation: moonDropRollCenterScale 4.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+            animation: moonDropRollLeftScale 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
             z-index: 50;
+        }
+
+        /* ==================== HANGING EARTH PENDULUM (Right Side) ==================== */
+        .hanging-earth-wrapper {
+            position: absolute;
+            top: -45px;
+            left: 75%; 
+            transform: translateX(-50%) translateY(-120%);
+            transform-origin: top center;
+            z-index: 55;
+            pointer-events: none;
+            opacity: 0;
+            width: 180px;
+            height: 380px;
+        }
+
+        @keyframes dropAndSwing {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-120%) rotate(0deg);
+            }
+            14% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0px) rotate(24deg);
+            }
+            28% {
+                transform: translateX(-50%) translateY(-6px) rotate(-18deg);
+            }
+            42% {
+                transform: translateX(-50%) translateY(2px) rotate(12deg);
+            }
+            58% {
+                transform: translateX(-50%) translateY(0px) rotate(-7deg);
+            }
+            74% {
+                transform: translateX(-50%) translateY(0px) rotate(4deg);
+            }
+            88% {
+                transform: translateX(-50%) translateY(0px) rotate(-1.5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0px) rotate(0deg);
+            }
+        }
+
+        /* Earth drops instantly with the screen shake (0s delay) */
+        body.launched .hanging-earth-wrapper {
+            animation: dropAndSwing 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
         /* 3. Rover Liftoff */
         body.launched .space-icon:nth-child(3) {
             transform: translateY(-130vh) rotate(12deg) scale(0.75) !important;
-            transition: transform 6.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s, filter 6.5s ease 0.3s !important;
+            transition: transform 3.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s, filter 3.5s ease 0.3s !important;
             filter: drop-shadow(0 40px 20px rgba(59, 130, 246, 0.9)) 
                     drop-shadow(0 90px 45px rgba(0, 255, 204, 0.75)) 
                     drop-shadow(0 150px 70px rgba(37, 99, 235, 0.5)) !important;
@@ -313,7 +358,7 @@
         /* 4. Lander Liftoff */
         body.launched .space-icon:nth-child(4) {
             transform: translateY(-130vh) rotate(-8deg) scale(0.75) !important;
-            transition: transform 5.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s, filter 5.8s ease 0.2s !important;
+            transition: transform 3.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s, filter 3.5s ease 0.2s !important;
             filter: drop-shadow(0 40px 20px rgba(236, 72, 153, 0.9)) 
                     drop-shadow(0 90px 45px rgba(168, 85, 247, 0.75)) 
                     drop-shadow(0 150px 70px rgba(219, 39, 119, 0.5)) !important;
@@ -321,7 +366,7 @@
 
         /* Moon color transitions matching the sequence */
         .moon-grad-stop1, .moon-grad-stop2, .moon-grad-stop3 {
-            transition: stop-color 4.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
+            transition: stop-color 3.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
         }
 
         body.launched .moon-grad-stop1 { stop-color: #f1f5f9; }
@@ -329,7 +374,7 @@
         body.launched .moon-grad-stop3 { stop-color: #334155; }
 
         .moon-crater {
-            transition: fill 4.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, opacity 4.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
+            transition: fill 3.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, opacity 3.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
         }
 
         body.launched .moon-crater {
@@ -396,26 +441,6 @@
             transform: translateX(6px);
         }
 
-        #toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(168, 85, 247, 0.95);
-            color: #fff;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        #toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
         #laser-canvas {
             position: absolute;
             top: 0;
@@ -436,7 +461,36 @@
 
     <canvas id="laser-canvas"></canvas>
 
-    <div id="toast">Initializing Autonomous Orbital Systems...</div>
+    <div class="hanging-earth-wrapper" id="hangingEarth">
+        <svg viewBox="0 0 180 380" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <defs>
+                <linearGradient id="earthGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8" />
+                    <stop offset="50%" stop-color="#2563eb" />
+                    <stop offset="100%" stop-color="#1e3a8a" />
+                </linearGradient>
+                <linearGradient id="landGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#4ade80" />
+                    <stop offset="100%" stop-color="#166534" />
+                </linearGradient>
+                <filter id="earthGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#38bdf8" flood-opacity="0.65"/>
+                </filter>
+            </defs>
+            <circle cx="90" cy="4" r="3.5" fill="#94a3b8" />
+            <line x1="90" y1="4" x2="90" y2="280" stroke="rgba(255, 255, 255, 0.35)" stroke-width="1.2" stroke-linecap="round" />
+            
+            <g filter="url(#earthGlow)">
+                <circle cx="90" cy="325" r="48" fill="none" stroke="rgba(56, 189, 248, 0.35)" stroke-width="2" />
+                <circle cx="90" cy="325" r="44" fill="url(#earthGrad)" />
+                <path d="M70 305 C 78 295, 95 300, 102 312 C 110 325, 98 342, 85 346 C 72 350, 60 332, 70 305 Z" fill="url(#landGrad)" opacity="0.85" />
+                <path d="M98 332 C 106 324, 122 328, 118 344 C 114 360, 102 356, 98 332 Z" fill="url(#landGrad)" opacity="0.85" />
+                <path d="M64 326 C 56 318, 48 330, 56 342 C 64 354, 72 338, 64 326 Z" fill="url(#landGrad)" opacity="0.85" />
+                <path d="M72 298 Q 85 294 98 302" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5" />
+                <path d="M56 342 Q 68 350 80 338" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.4" />
+            </g>
+        </svg>
+    </div>
 
     <header>
         <a href="#" class="gdg-logo">
@@ -464,7 +518,6 @@
             </h1>
 
             <div class="icons-row">
-                <!-- 1. Satellite Icon -->
                 <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="smoothGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -498,7 +551,6 @@
                     <path d="M47 70V78M53 70V78" stroke="#ff2a6d" stroke-width="2.5" stroke-linecap="round"/>
                 </svg>
 
-                <!-- 2. Moon Icon -->
                 <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="smoothGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -515,7 +567,6 @@
                     <circle class="moon-crater" cx="28" cy="58" r="4" fill="#05050a" opacity="0.35"/>
                 </svg>
 
-                <!-- 3. Rover Icon -->
                 <svg class="space-icon" id="lander-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="smoothGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -542,7 +593,6 @@
                     <circle cx="75" cy="80" r="3.5" fill="#3b82f6"/>
                 </svg>
 
-                <!-- 4. Lander Icon -->
                 <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="smoothGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -693,20 +743,16 @@
             if (isLaunched) return;
             isLaunched = true;
 
-            // Remove jump hover classes so CSS animation executes cleanly
             spaceIcons.forEach(icon => {
                 icon.classList.remove('jumping');
             });
 
-            /*const toast = document.getElementById('toast');
-            toast.textContent = "IGNITION! Orbital Liftoff Initiated...";
-            toast.classList.add('show');*/
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3500);
-
-            // Trigger Launch layout, screen shake and upward liftoff
             document.body.classList.add('launched');
+
+            // Timeout reduced to 3500ms so it transitions instantly when the Earth animation settles
+            setTimeout(() => {
+                window.location.href = 'upload.html';
+            }, 3500);
         }
     </script>
 </body>
