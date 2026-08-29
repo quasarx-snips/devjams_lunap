@@ -6,692 +6,280 @@
     <title>LunaP - DevJams '26 | Team KompilerZ</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
-        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Outfit',sans-serif}
+        :root{--bg:#05050a;--accent:#a855f7;--neon:#00ffcc;--highlight:#ff2a6d;--muted:#a0a0a0}
+        html,body{height:100%;background:var(--bg);color:#fff}
+        body{overflow:hidden;display:flex;flex-direction:column;align-items:center}
 
-        body {
-            background-color: #05050a;
-            color: #ffffff;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
+        header{width:100%;padding:16px 36px;display:flex;justify-content:space-between;align-items:center;z-index:20}
+        .gdg-logo{display:flex;align-items:center;gap:10px;color:#fff}
+        .gdg-text{display:flex;flex-direction:column;font-weight:700}
+        .gdg-sub{font-size:11px;color:var(--muted);font-weight:600}
 
-        /* Background ambient glow */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(120, 50, 255, 0.18) 0%, rgba(5, 5, 10, 0) 70%);
-            z-index: 0;
-            pointer-events: none;
-        }
+        .main-container{position:relative;width:100%;flex:1;display:flex;align-items:center;justify-content:center}
 
-        header {
-            width: 100%;
-            padding: 16px 36px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-        }
+        /* Icons & hero */
+        .hero-wrapper{position:relative;z-index:18;display:flex;flex-direction:column;align-items:center;gap:8px}
+        .lunap-title{font-size:clamp(4rem,12vw,10rem);font-weight:900;letter-spacing:-0.06em;user-select:none;z-index:22}
+        .icons-row{display:flex;align-items:end;justify-content:center;gap:22px;margin-top:22px;transition:transform 0.9s cubic-bezier(.2,.9,.2,1),opacity .6s}
+        .space-icon{width:clamp(80px,14vw,160px);height:auto;transition:transform .6s ease,opacity .6s ease}
 
-        .gdg-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: #fff;
-        }
+        /* launch icons animation: when .launched applied icons fly outward */
+        .icons-row.launched .space-icon{transform:translateY(-180vh) scale(.6);opacity:0}
 
-        .gdg-logo svg {
-            width: 28px;
-            height: 28px;
-        }
+        /* bottom moon (initial) */
+        .moon-layer{position:fixed;left:50%;bottom:-15vh;transform:translateX(-50%) translateY(0) scale(.6);width:420px;height:220px;z-index:10;pointer-events:none;transition:transform 1.1s cubic-bezier(.2,.9,.2,1),bottom 1s ease}
+        .moon-curve{width:100%;height:100%}
 
-        .gdg-text {
-            display: flex;
-            flex-direction: column;
-            font-size: 13px;
-            font-weight: 700;
-            line-height: 1.2;
-        }
+        /* central moon (revealed) */
+        .central-moon-wrap{position:fixed;left:50%;top:60%;transform:translate(-50%,0) scale(0.6);width:360px;height:360px;border-radius:50%;overflow:hidden;z-index:30;opacity:0;transition:transform 1s cubic-bezier(.2,.9,.2,1),opacity 0.8s ease,top 1s cubic-bezier(.2,.9,.2,1)}
+        .central-moon-wrap.revealed{top:50%;transform:translate(-50%,-50%) scale(1);opacity:1}
+        .central-moon{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 30% 30%, #f8fafc 0%, #e6e8ff 20%, #d6d3f9 45%, #bdb8f6 70%, #a78bfa 100%);box-shadow:inset -12px -8px 40px rgba(0,0,0,.5);position:relative;display:flex;align-items:center;justify-content:center}
 
-        .gdg-sub {
-            font-size: 9px;
-            color: #a0a0a0;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
+        .moon-upload-area{position:absolute;inset:20%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+        .upload-btn{background:#fff;color:var(--bg);padding:10px 16px;border-radius:999px;border:none;font-weight:700;cursor:pointer}
+        .process-btn{background:var(--neon);color:#05050a;padding:8px 14px;border-radius:999px;border:none;font-weight:800;cursor:pointer}
+        .upload-input{display:none}
+        .preview-img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 10px 40px rgba(168,85,247,0.15)}
 
-        .menu-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            color: #fff;
-            font-size: 13px;
-            font-weight: 600;
-        }
+        /* satellite & earth top-right */
+        .earth-top{position:fixed;right:6%;top:6%;width:60px;height:60px;z-index:40;display:flex;align-items:center;justify-content:center}
+        .earth-dot-small{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #9ef6d4 0%, #22d0ff 55%, #0b61ff 100%);box-shadow:0 6px 18px rgba(11,97,255,0.25)}
+        .satellite-top{position:absolute;right:calc(6% - 40px);top:calc(6% + 10px);width:40px;height:40px;z-index:41;transform-origin:center;}
+        .sat-orbit{animation:spin 4.5s linear infinite}
+        @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-        .menu-cat {
-            width: 34px;
-            height: 34px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300ffcc"><path d="M5 3L8.5 7H15.5L19 3L21 6V11C21 16.5 17 21 12 21C7 21 3 16.5 3 11V6L5 3Z"/></svg>') center/cover no-repeat;
-            filter: drop-shadow(0 0 8px rgba(0,255,204,0.7));
-            transition: transform 0.3s ease;
-        }
+        /* path visual (hidden by default) */
+        svg.full-path{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:35}
+        .invisible{opacity:0}
 
-        .menu-container:hover .menu-cat {
-            transform: scale(1.1) rotate(6deg);
-        }
+        /* scanning beam */
+        .scan-overlay{position:absolute;inset:0;pointer-events:none}
+        .scan-beam{position:absolute;left:-60%;top:0;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,255,204,0.55),transparent);transform:skewX(-12deg);opacity:0}
 
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            width: 100%;
-            max-width: 100vw;
-            padding: 0 20px;
-            z-index: 10;
-            text-align: center;
-            gap: 10px;
-            margin-top: -10px;
-        }
+        /* helper */
+        .hide{display:none}
 
-        .hero-wrapper {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .lunap-title {
-            font-size: clamp(8rem, 25vw, 24rem); 
-            font-weight: 900;
-            letter-spacing: -0.09em;
-            line-height: 0.75;
-            display: flex;
-            justify-content: center;
-            user-select: none;
-            position: relative;
-            z-index: 20;
-            margin: 0;
-            pointer-events: none;
-        }
-
-        .char {
-            display: inline-block;
-            color: #ffffff;
-            -webkit-text-stroke: 2px #000000;
-            text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.9);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, text-shadow 0.3s ease;
-            cursor: default;
-            margin-right: -0.06em;
-            pointer-events: auto;
-        }
-        .char:last-child {
-            margin-right: 0;
-        }
-
-        .char:nth-child(1):hover { color: #a855f7; text-shadow: 0 0 25px rgba(168, 85, 247, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(-3deg); z-index: 25; }
-        .char:nth-child(2):hover { color: #3b82f6; text-shadow: 0 0 25px rgba(59, 130, 246, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(3deg); z-index: 25; }
-        .char:nth-child(3):hover { color: #8b5cf6; text-shadow: 0 0 25px rgba(139, 92, 246, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(-2deg); z-index: 25; }
-        .char:nth-child(4):hover { color: #60a5fa; text-shadow: 0 0 25px rgba(96, 165, 250, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(4deg); z-index: 25; }
-        .char:nth-child(5):hover { color: #c084fc; text-shadow: 0 0 25px rgba(192, 132, 252, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(-4deg); z-index: 25; }
-
-        .icons-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: nowrap;
-            z-index: 10;
-            margin-top: clamp(-100px, -14vw, -200px);
-            width: 100%;
-            max-width: 1400px;
-        }
-
-        .space-icon {
-            width: clamp(140px, 23vw, 320px);
-            height: clamp(140px, 23vw, 320px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
-            cursor: pointer;
-            filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
-            aspect-ratio: 1/1;
-        }
-
-        .space-icon:not(:first-child) {
-            margin-left: clamp(-60px, -9vw, -125px);
-        }
-
-        /* Satellite (1) and Rover (3) share the exact same Y axis offset and pushed further down */
-        .space-icon:nth-child(1) { transform: translateY(85px) rotate(-4deg); z-index: 4; }
-        .space-icon:nth-child(2) { transform: translateY(50px) scale(1.15) rotate(2deg); z-index: 3; }
-        .space-icon:nth-child(3) { transform: translateY(85px) scale(1.1) rotate(-2deg); z-index: 2; }
-        .space-icon:nth-child(4) { transform: translateY(40px) rotate(4deg); z-index: 1; }
-
-        .space-icon:nth-child(1):hover { transform: translateY(65px) scale(1.1) rotate(-4deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
-        .space-icon:nth-child(2):hover { transform: translateY(30px) scale(1.25) rotate(2deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
-        .space-icon:nth-child(3):hover { transform: translateY(65px) scale(1.2) rotate(-2deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
-        .space-icon:nth-child(4):hover { transform: translateY(20px) scale(1.1) rotate(4deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
-        
-        @keyframes jumpBounce1 {
-            0%, 100% { transform: translateY(85px) scale(1) rotate(-4deg); }
-            50% { transform: translateY(60px) scale(1.06) rotate(-8deg); }
-        }
-        @keyframes jumpBounce2 {
-            0%, 100% { transform: translateY(50px) scale(1.15) rotate(2deg); }
-            50% { transform: translateY(25px) scale(1.2) rotate(0deg); }
-        }
-        @keyframes jumpBounce3 {
-            0%, 100% { transform: translateY(85px) scale(1.1) rotate(-2deg); }
-            50% { transform: translateY(60px) scale(1.18) rotate(-6deg); }
-        }
-        @keyframes jumpBounce4 {
-            0%, 100% { transform: translateY(40px) scale(1) rotate(4deg); }
-            50% { transform: translateY(15px) scale(1.06) rotate(2deg); }
-        }
-
-        .space-icon.jumping:nth-child(1) { animation: jumpBounce1 0.42s ease-in-out infinite; }
-        .space-icon.jumping:nth-child(2) { animation: jumpBounce2 0.48s ease-in-out infinite; }
-        .space-icon.jumping:nth-child(3) { animation: jumpBounce3 0.39s ease-in-out infinite; }
-        .space-icon.jumping:nth-child(4) { animation: jumpBounce4 0.45s ease-in-out infinite; }
-
-        .subtitle {
-            font-size: clamp(1rem, 2vw, 1.35rem);
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: -0.3px;
-            max-width: 700px;
-            margin-top: 30px;
-            z-index: 10;
-        }
-
-        .btn-proceed {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #ffffff;
-            color: #05050a;
-            padding: 14px 32px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
-            border: none;
-            cursor: pointer;
-            margin-top: 5px;
-            margin-bottom: 20px;
-            z-index: 10;
-        }
-
-        .btn-proceed:hover {
-            transform: scale(1.08) translateY(-3px);
-            background: #f1f5f9;
-            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.5);
-        }
-
-        .btn-proceed svg {
-            width: 18px;
-            height: 18px;
-            transition: transform 0.3s ease;
-        }
-
-        .btn-proceed:hover svg {
-            transform: translateX(6px);
-        }
-
-        #toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(168, 85, 247, 0.95);
-            color: #fff;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        #toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        #laser-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 30;
-        }
-
-        /* Lunar curve + full moon reveal */
-        .moon-layer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 40vh;
-            z-index: 5;
-            pointer-events: none;
-            overflow: visible;
-        }
-
-        svg.moon-curve {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .full-moon-wrap {
-            position: absolute;
-            right: 6%;
-            bottom: 8vh;
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            overflow: hidden;
-            transform: scale(0.8) translateY(40px);
-            opacity: 0;
-            transition: transform 1s cubic-bezier(0.2,0.9,0.25,1), opacity 1s ease-in-out;
-            z-index: 6;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-        }
-
-        .full-moon-wrap.revealed {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
-
-        .full-moon {
-            width: 100%;
-            height: 100%;
-            display: block;
-            background: radial-gradient(circle at 30% 30%, #f8fafc 0%, #e6e8ff 20%, #d6d3f9 45%, #bdb8f6 70%, #a78bfa 100%);
-            border-radius: 50%;
-            box-shadow: inset -10px -6px 30px rgba(0,0,0,0.45);
-            position: relative;
-        }
-
-        .full-moon .crater {
-            position: absolute;
-            background: rgba(5,5,10,0.15);
-            border-radius: 50%;
-            box-shadow: inset -4px -3px 8px rgba(0,0,0,0.4);
-            mix-blend-mode: multiply;
-        }
-
-        .earth-dot {
-            position: absolute;
-            right: 12%;
-            bottom: 26vh;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, #a7f3d0 0%, #0be0ff 60%, #0b61ff 100%);
-            transform-origin: center center;
-            opacity: 0;
-            z-index: 12;
-            box-shadow: 0 6px 18px rgba(11,97,255,0.35);
-        }
-
-        .earth-dot.open {
-            animation: earthGrow 1.2s forwards cubic-bezier(0.2,0.9,0.25,1);
-            opacity: 1;
-        }
-
-        @keyframes earthGrow {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.6); }
-            100% { transform: scale(2.6); }
-        }
-
+        @media (max-width:780px){.central-moon-wrap{width:280px;height:280px}.moon-layer{width:320px;height:160px}}
     </style>
 </head>
 <body>
 
-    <canvas id="laser-canvas"></canvas>
-
-    <div id="toast">Initializing Autonomous Orbital Systems...</div>
-
     <header>
         <a href="#" class="gdg-logo">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
                 <path d="M7 8L3 12L7 16" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M17 8L21 12L17 16" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M14 6L10 18" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round"/>
             </svg>
-            <div class="gdg-text">
-                Team KompilerZ
-                <span class="gdg-sub">DevJams'26 • Gravitas • GDG</span>
-            </div>
+            <div class="gdg-text">Team KompilerZ <span class="gdg-sub">DevJams'26 • LunaP</span></div>
         </a>
-        <div class="menu-container">
-            <span>Menu</span>
-            <div class="menu-cat"></div>
-        </div>
+        <div class="menu-container">Menu <div class="menu-cat"></div></div>
     </header>
 
     <main class="main-container">
-        
         <div class="hero-wrapper">
-            <h1 class="lunap-title" id="lunap-heading">
-                <span class="char">L</span><span class="char">u</span><span class="char">n</span><span class="char">a</span><span class="char">P</span>
-            </h1>
-
-            <div class="icons-row">
-                <!-- original icons preserved -->
-                <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="smoothGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#1e1b4b" />
-                            <stop offset="50%" stop-color="#7c3aed" />
-                            <stop offset="100%" stop-color="#2563eb" />
-                        </linearGradient>
-                    </defs>
-                    <rect x="4" y="38" width="30" height="24" rx="6" fill="url(#smoothGrad1)" opacity="0.9" />
-                    <line x1="11" y1="38" x2="11" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    <line x1="18" y1="38" x2="18" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    <line x1="25" y1="38" x2="25" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    
-                    <rect x="66" y="38" width="30" height="24" rx="6" fill="url(#smoothGrad1)" opacity="0.9" />
-                    <line x1="73" y1="38" x2="73" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    <line x1="80" y1="38" x2="80" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-                    <line x1="87" y1="38" x2="87" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
-
-                    <rect x="34" y="30" width="32" height="40" rx="8" fill="url(#smoothGrad1)" />
-                    
-                    <rect x="38" y="36" width="24" height="18" rx="5" fill="#05050a" stroke="#7c3aed" stroke-width="2" opacity="0.95"/>
-                    <circle cx="45" cy="45" r="4.5" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.2"/>
-                    <circle cx="55" cy="45" r="4.5" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.2"/>
-                    
-                    <circle cx="45" cy="45" r="2.5" fill="#00ffcc" />
-                    <circle cx="55" cy="45" r="2.5" fill="#00ffcc" />
-
-                    <path d="M50 16v14" stroke="#9333ea" stroke-width="3" stroke-linecap="round"/>
-                    <circle cx="50" cy="14" r="3" fill="#ff2a6d"/>
-                    <path d="M40 70L34 84M60 70L66 84" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
-                    <path d="M47 70V78M53 70V78" stroke="#ff2a6d" stroke-width="2.5" stroke-linecap="round"/>
-                </svg>
-
-                <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="smoothGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#312e81" />
-                            <stop offset="60%" stop-color="#8b5cf6" />
-                            <stop offset="100%" stop-color="#ec4899" />
-                        </linearGradient>
-                    </defs>
-                    <circle cx="50" cy="50" r="44" fill="url(#smoothGrad2)" />
-                    <circle cx="38" cy="45" r="10" fill="#05050a" opacity="0.35"/>
-                    <circle cx="68" cy="62" r="9" fill="#05050a" opacity="0.35"/>
-                    <circle cx="60" cy="32" r="6" fill="#05050a" opacity="0.35"/>
-                    <circle cx="48" cy="68" r="5" fill="#05050a" opacity="0.35"/>
-                    <circle cx="28" cy="58" r="4" fill="#05050a" opacity="0.35"/>
-                </svg>
-
-                <svg class="space-icon" id="lander-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="smoothGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#3b0764" />
-                            <stop offset="50%" stop-color="#7e22ce" />
-                            <stop offset="100%" stop-color="#2563eb" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M22 54L32 36H68L78 54H85V72H15V54H22Z" fill="url(#smoothGrad4)" stroke-linejoin="round"/>
-                    <rect x="24" y="16" width="52" height="24" rx="12" fill="#05050a" stroke="#7e22ce" stroke-width="2.5" opacity="0.95"/>
-                    
-                    <circle id="left-eye-base" cx="40" cy="28" r="7" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.5"/>
-                    <circle id="right-eye-base" cx="60" cy="28" r="7" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.5"/>
-                    
-                    <circle id="left-pupil" cx="40" cy="28" r="4" fill="#ff2a6d" style="transition: fill 0.2s ease, filter 0.2s ease;" />
-                    <circle id="right-pupil" cx="60" cy="28" r="4" fill="#ff2a6d" style="transition: fill 0.2s ease, filter 0.2s ease;" />
-                    
-                    <rect x="40" y="59" width="20" height="8" rx="4" fill="#05050a" opacity="0.6"/>
-                    <circle cx="25" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
-                    <circle cx="50" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
-                    <circle cx="75" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
-                    <circle cx="25" cy="80" r="3.5" fill="#3b82f6"/>
-                    <circle cx="50" cy="80" r="3.5" fill="#3b82f6"/>
-                    <circle cx="75" cy="80" r="3.5" fill="#3b82f6"/>
-                </svg>
-
-                <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="smoothGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#1e1b4b" />
-                            <stop offset="50%" stop-color="#6d28d9" />
-                            <stop offset="100%" stop-color="#3b82f6" />
-                        </linearGradient>
-                    </defs>
-                    <line x1="50" y1="8" x2="50" y2="16" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
-                    <path d="M38 28C38 18 62 18 62 28V34H38V28Z" fill="url(#smoothGrad3)"/>
-                    <circle cx="50" cy="26" r="8" fill="#05050a" opacity="0.5"/>
-                    <path d="M46 26C46 24 48 22 50 22V30C48 30 46 28 46 26Z" fill="#ff2a6d"/>
-                    <rect x="30" y="34" width="40" height="22" rx="6" fill="url(#smoothGrad3)"/>
-                    <path d="M30 56H70L62 74H38L30 56Z" fill="url(#smoothGrad3)"/>
-                    <circle cx="50" cy="65" r="4" fill="#05050a" opacity="0.5"/>
-                    <path d="M34 74L16 90M66 74L84 90M50 74V90" stroke="#a855f7" stroke-width="3" stroke-linecap="round"/>
-                    <rect x="10" y="88" width="12" height="4" rx="2" fill="#3b82f6"/>
-                    <rect x="78" y="88" width="12" height="4" rx="2" fill="#3b82f6"/>
-                    <rect x="44" y="88" width="12" height="4" rx="2" fill="#3b82f6"/>
-                </svg>
+            <h1 class="lunap-title">LunaP</h1>
+            <div class="icons-row" id="iconsRow">
+                <svg class="space-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"> <rect x="4" y="38" width="30" height="24" rx="6" fill="#7c3aed" /> </svg>
+                <svg class="space-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"> <circle cx="50" cy="50" r="44" fill="#8b5cf6" /> </svg>
+                <svg class="space-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" id="lander-small"> <rect x="24" y="16" width="52" height="24" rx="12" fill="#7e22ce"/> </svg>
             </div>
+            <button class="btn-proceed upload-btn" id="proceedBtn">Proceed further</button>
         </div>
-
-        <p class="subtitle">Autonomous Hazard-aware lunar surface navigator and analyzer</p>
-
-        <button class="btn-proceed" id="proceed-btn">
-            Proceed further
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-
     </main>
 
-    <!-- Lunar surface curve + full moon + earth dot -->
-    <div class="moon-layer" aria-hidden="true">
-        <!-- stylized ground curve -->
-        <svg class="moon-curve" viewBox="0 0 1600 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="groundGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#0b0720"/>
-                    <stop offset="100%" stop-color="#05050a"/>
-                </linearGradient>
-            </defs>
-            <path d="M0,220 C200,180 400,140 600,150 C800,160 1000,200 1200,190 C1400,180 1600,160 1600,160 L1600,400 L0,400 Z" fill="url(#groundGrad)" opacity="0.95"/>
-            <!-- some stylized craters on the curve -->
-            <g fill="#0a0713" opacity="0.85">
-                <ellipse cx="240" cy="200" rx="40" ry="22" />
-                <ellipse cx="520" cy="180" rx="26" ry="14" />
-                <ellipse cx="880" cy="170" rx="36" ry="18" />
-                <ellipse cx="1180" cy="190" rx="30" ry="16" />
-            </g>
-        </svg>
-
-        <div class="full-moon-wrap" id="fullMoon">
-            <div class="full-moon">
-                <!-- carved craters positioned absolutely -->
-                <div class="crater" style="left:14%; top:20%; width:26px; height:26px; border-radius:50%;"></div>
-                <div class="crater" style="left:62%; top:18%; width:36px; height:36px;"></div>
-                <div class="crater" style="left:44%; top:60%; width:22px; height:22px;"></div>
-                <div class="crater" style="left:74%; top:58%; width:14px; height:14px;"></div>
-                <div class="crater" style="left:28%; top:70%; width:18px; height:18px;"></div>
-            </div>
-        </div>
-
-        <div class="earth-dot" id="earthDot"></div>
+    <!-- bottom moon curve (initial) -->
+    <div class="moon-layer" id="moonCurve">
+        <svg class="moon-curve" viewBox="0 0 1600 400" preserveAspectRatio="none"><path d="M0,220 C200,180 400,140 600,150 C800,160 1000,200 1200,190 C1400,180 1600,160 1600,160 L1600,400 L0,400 Z" fill="#0a0713"/></svg>
     </div>
 
+    <!-- central moon that appears after proceed -->
+    <div class="central-moon-wrap" id="centralMoon">
+        <div class="central-moon">
+            <div class="moon-upload-area" id="moonUploadArea">
+                <input type="file" id="moonFile" class="upload-input" accept="image/*">
+                <button class="upload-btn" id="moonChoose">Choose Image</button>
+                <button class="process-btn hide" id="moonProcess">Process Image</button>
+                <div class="scan-overlay" id="moonScan"><div class="scan-beam" id="moonScanBeam"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- earth top-right & satellite orbiting -->
+    <div class="earth-top">
+        <svg width="60" height="60" viewBox="0 0 64 64"><defs><radialGradient id="eg2" cx="20%" cy="25%"><stop offset="0%" stop-color="#bff3db"/><stop offset="60%" stop-color="#1ecbff"/><stop offset="100%" stop-color="#0b61ff"/></radialGradient></defs><circle cx="32" cy="32" r="28" fill="url(#eg2)" stroke="#06345a" stroke-width="2"/></svg>
+        <div class="earth-dot-small" id="earthTopDot" style="position:absolute;right:6px;top:6px"></div>
+        <div class="satellite-top sat-orbit" id="topSatellite">
+            <svg viewBox="0 0 64 64" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="18" width="52" height="28" rx="4" fill="#0b0b10" stroke="#7c3aed" stroke-width="2"/>
+              <circle cx="32" cy="32" r="4" fill="#00ffcc" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- SVG path for satellite flight (invisible but used for getPointAtLength) -->
+    <svg class="full-path invisible" id="flightPathSVG" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+        <!-- path from top-right (earth) to moon center, a smooth elliptical style path -->
+        <path id="flightPath" d="M1700,120 C1450,260 1200,400 980,560" stroke="rgba(255,255,255,0.08)" fill="none" stroke-width="2"/>
+    </svg>
+
     <script>
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
+        // Elements
+        const proceedBtn = document.getElementById('proceedBtn');
+        const iconsRow = document.getElementById('iconsRow');
+        const moonCurve = document.getElementById('moonCurve');
+        const centralMoon = document.getElementById('centralMoon');
+        const moonChoose = document.getElementById('moonChoose');
+        const moonFile = document.getElementById('moonFile');
+        const moonProcess = document.getElementById('moonProcess');
+        const moonUploadArea = document.getElementById('moonUploadArea');
+        const topSatellite = document.getElementById('topSatellite');
+        const earthTopDot = document.getElementById('earthTopDot');
+        const flightPath = document.getElementById('flightPath');
+        const flightSVG = document.getElementById('flightPathSVG');
+        const moonScanBeam = document.getElementById('moonScanBeam');
 
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            updateTrackingSensors();
-        });
+        let uploadedBlobURL = null;
+        let satelliteOnMoon = false;
+        let currentSatelliteElem = null;
 
-        const roverLeftPupil = document.getElementById('left-pupil');
-        const roverRightPupil = document.getElementById('right-pupil');
-
-        const canvas = document.getElementById('laser-canvas');
-        const ctx = canvas.getContext('2d');
-        const proceedBtn = document.getElementById('proceed-btn');
-        const spaceIcons = document.querySelectorAll('.space-icon');
-        const fullMoon = document.getElementById('fullMoon');
-        const earthDot = document.getElementById('earthDot');
-
-        proceedBtn.addEventListener('mouseenter', () => {
-            spaceIcons.forEach(icon => icon.classList.add('jumping'));
-        });
-        proceedBtn.addEventListener('mouseleave', () => {
-            spaceIcons.forEach(icon => icon.classList.remove('jumping'));
-        });
-
-        proceedBtn.addEventListener('click', () => {
-            triggerToast();
-            startMoonReveal();
-        });
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        function updateTrackingSensors() {
-            // Rover tracking
-            if (!roverLeftPupil || !roverRightPupil) return;
-            const rovLBase = document.getElementById('left-eye-base').getBoundingClientRect();
-            const rovRBase = document.getElementById('right-eye-base').getBoundingClientRect();
-            if(rovLBase.width > 0) {
-                const rlx = rovLBase.left + rovLBase.width / 2;
-                const rly = rovLBase.top + rovLBase.height / 2;
-                const rrx = rovRBase.left + rovRBase.width / 2;
-                const rry = rovRBase.top + rovRBase.height / 2;
-
-                const angleRovL = Math.atan2(mouseY - rly, mouseX - rlx);
-                const angleRovR = Math.atan2(mouseY - rry, mouseX - rrx);
-                const maxDistRov = 2.5;
-
-                roverLeftPupil.setAttribute('cx', 40 + Math.cos(angleRovL) * maxDistRov);
-                roverLeftPupil.setAttribute('cy', 28 + Math.sin(angleRovL) * maxDistRov);
-                roverRightPupil.setAttribute('cx', 60 + Math.cos(angleRovR) * maxDistRov);
-                roverRightPupil.setAttribute('cy', 28 + Math.sin(angleRovR) * maxDistRov);
+        // small helper: animate along SVG path using getPointAtLength
+        function animateAlongPath(elem, path, duration, reverse=false, easingFunc=null, cb=null){
+            const total = path.getTotalLength();
+            const start = performance.now();
+            function step(now){
+                const t = Math.min(1,(now-start)/duration);
+                const eased = easingFunc ? easingFunc(t) : (t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2); // default easeInOutCubic
+                const len = reverse ? total*(1 - eased) : total*eased;
+                const pt = path.getPointAtLength(len);
+                elem.style.left = pt.x + 'px';
+                elem.style.top = pt.y + 'px';
+                elem.style.transform = 'translate(-50%,-50%)';
+                if(t<1) requestAnimationFrame(step); else if(cb) cb();
             }
+            requestAnimationFrame(step);
         }
 
-        let laserPulse = 0;
-        
-        function renderLasers() {
-            if (!ctx) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // convert SVG coordinates to page coordinates
+        function svgPointToPage(pt, svg){
+            const rect = svg.getBoundingClientRect();
+            // flightSVG uses full viewport, so coordinates approximately match
+            return {x: rect.left + pt.x*(rect.width/1920), y: rect.top + pt.y*(rect.height/1080)};
+        }
 
-            const btnRect = proceedBtn.getBoundingClientRect();
-            const btnCenterX = btnRect.left + btnRect.width / 2;
-            const btnCenterY = btnRect.top + btnRect.height / 2;
-            const distToBtn = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
+        // proceed click: icons launch, moon rises and then central moon reveals
+        proceedBtn.addEventListener('click', ()=>{
+            // trigger icons launch (they fly away)
+            iconsRow.classList.add('launched');
+            // small immediate icon animation: scale up then off-screen via CSS class
 
-            const isNearButton = distToBtn < 150 || (mouseX >= btnRect.left - 50 && mouseX <= btnRect.right + 50 && mouseY >= btnRect.top - 50 && mouseY <= btnRect.bottom + 50);
-            
-            const laserColor = isNearButton ? '#00ffcc' : '#ff2a6d';
+            // lift the initial moon curve upward to simulate rising
+            moonCurve.style.transition = 'bottom 0.9s cubic-bezier(.2,.9,.2,1), transform 0.95s cubic-bezier(.2,.9,.2,1)';
+            moonCurve.style.transform = 'translateX(-50%) translateY(-30vh) scale(0.9)';
+            // after a short delay, unzoom into central moon
+            setTimeout(()=>{
+                centralMoon.classList.add('revealed');
+                // hide curve after central reveal
+                setTimeout(()=>{ moonCurve.style.opacity = '0'; },700);
+            },700);
+            // also slightly animate topSatellite glow to hint orbit
+            topSatellite.animate([{transform:'scale(1)'},{transform:'scale(1.05)'},{transform:'scale(1)'}],{duration:1200,iterations:1});
+        });
 
-            // Update rover pupil colors & glows
-            if (roverLeftPupil && roverRightPupil) {
-                [roverLeftPupil, roverRightPupil].forEach(p => {
-                    p.setAttribute('fill', laserColor);
-                    p.style.filter = `drop-shadow(0 0 8px ${laserColor})`;
-                });
-            }
+        // choose image inside central moon
+        moonChoose.addEventListener('click', ()=> moonFile.click());
 
-            const rovLRect = roverLeftPupil ? roverLeftPupil.getBoundingClientRect() : {width:0};
-            const rovRRect = roverRightPupil ? roverRightPupil.getBoundingClientRect() : {width:0};
-            
-            if (rovLRect.width === 0) {
-                requestAnimationFrame(renderLasers);
-                return;
-            }
+        moonFile.addEventListener('change',(e)=>{
+            const f = e.target.files && e.target.files[0];
+            if(!f) return;
+            if(uploadedBlobURL) URL.revokeObjectURL(uploadedBlobURL);
+            uploadedBlobURL = URL.createObjectURL(f);
+            // create img element inside moonUploadArea
+            let img = document.querySelector('.preview-img');
+            if(!img){ img = document.createElement('img'); img.className='preview-img'; moonUploadArea.appendChild(img);} 
+            img.src = uploadedBlobURL;
+            // show process button
+            moonProcess.classList.remove('hide');
+            moonChoose.textContent = 'Change Image';
+            // after image added, trigger satellite departure from top orbit to moon
+            launchSatelliteFromEarthToMoon();
+        });
 
-            laserPulse += 0.3;
-            const alpha = 0.85 + Math.sin(laserPulse) * 0.15;
+        // function to launch satellite from top right earth (topSatellite) along path to moon
+        function launchSatelliteFromEarthToMoon(){
+            if(satelliteOnMoon) return;
+            // create moving satellite element positioned fixed
+            const sat = topSatellite.cloneNode(true);
+            sat.id = 'movingSat';
+            sat.style.position = 'fixed';
+            sat.style.zIndex = 50;
+            document.body.appendChild(sat);
+            // starting pos: topSatellite center
+            const topRect = topSatellite.getBoundingClientRect();
+            sat.style.left = (topRect.left + topRect.width/2) + 'px';
+            sat.style.top = (topRect.top + topRect.height/2) + 'px';
+            sat.style.transform = 'translate(-50%,-50%) scale(1)';
 
-            // Draw Rover Lasers only
-            [
-                {x: rovLRect.left + rovLRect.width/2, y: rovLRect.top + rovLRect.height/2},
-                {x: rovRRect.left + rovRRect.width/2, y: rovRRect.top + rovRRect.height/2}
-            ].forEach(origin => {
-                ctx.beginPath();
-                ctx.moveTo(origin.x, origin.y);
-                ctx.lineTo(mouseX, mouseY);
-                ctx.strokeStyle = isNearButton ? `rgba(0, 255, 204, ${alpha * 0.8})` : `rgba(255, 42, 109, ${alpha * 0.8})`;
-                ctx.lineWidth = 2;
-                ctx.shadowColor = laserColor;
-                ctx.shadowBlur = 18;
-                ctx.stroke();
+            // compute path point iterator using flightPath (SVG with viewport 1920x1080)
+            const path = flightPath;
+            // animate along path
+            animateAlongPath(sat, path, 1200, false, null, ()=>{
+                // arrive: snap satellite to central moon area (absolute center of centralMoon)
+                const cmRect = centralMoon.getBoundingClientRect();
+                sat.style.left = (cmRect.left + cmRect.width/2) + 'px';
+                sat.style.top = (cmRect.top + cmRect.height/2 - 120) + 'px';
+                // hold in place as orbiting around moon (CSS rotation subtle)
+                sat.classList.add('sat-orbit');
+                satelliteOnMoon = true;
+                currentSatelliteElem = sat;
             });
-
-            // Target Lock Glow at Mouse
-            ctx.beginPath();
-            ctx.arc(mouseX, mouseY, isNearButton ? 8 : 6, 0, Math.PI * 2);
-            ctx.fillStyle = isNearButton ? 'rgba(0, 255, 204, 0.9)' : 'rgba(255, 42, 109, 0.9)';
-            ctx.fill();
-
-            requestAnimationFrame(renderLasers);
         }
 
-        requestAnimationFrame(renderLasers);
+        moonProcess.addEventListener('click', ()=>{
+            if(!satelliteOnMoon || !currentSatelliteElem){ alert('Satellite not present yet. Wait for arrival.'); return; }
+            // scanning animation: beam sweeps across the uploaded image inside moon
+            moonScanBeam.style.opacity = 1;
+            moonScanBeam.style.transition = 'transform 2s linear, opacity .4s ease';
+            moonScanBeam.style.transform = 'translateX(300%)';
+            // init beam on left
+            moonScanBeam.style.left = '-120%';
+            requestAnimationFrame(()=>{ moonScanBeam.style.transform = 'translateX(0)'; moonScanBeam.style.left='0%'; });
+            // during scan, small satellite bob / glow
+            currentSatelliteElem.animate([{transform:'translate(-50%,-50%) translateY(0)'},{transform:'translate(-50%,-50%) translateY(-8px)'},{transform:'translate(-50%,-50%) translateY(0)'}],{duration:800,iterations:3});
+            setTimeout(()=>{
+                moonScanBeam.style.opacity = 0;
+                // after scan, return satellite along reverse path with easing
+                returnSatelliteToEarthWithPhysics(currentSatelliteElem);
+            },2200);
+        });
 
-        function triggerToast() {
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+        function returnSatelliteToEarthWithPhysics(satElem){
+            // remove orbiting class
+            satElem.classList.remove('sat-orbit');
+            // determine current page position (start)
+            const startRect = satElem.getBoundingClientRect();
+            const start = {x:startRect.left + startRect.width/2, y:startRect.top + startRect.height/2};
+            // target earth position (topSatellite center)
+            const targetRect = topSatellite.getBoundingClientRect();
+            const target = {x: targetRect.left + targetRect.width/2, y: targetRect.top + targetRect.height/2};
+
+            // create an elliptical return path by using the same flightPath but reverse
+            const path = flightPath;
+            // animate along reverse (moon->earth) with easing that simulates gravity (easeOutQuad overall but with velocity increase in middle)
+            animateAlongPath(satElem, path, 1200, true, function(t){ // custom easing: easeInOutQuad
+                return t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+            }, ()=>{
+                // land on earth: remove element
+                satElem.remove();
+                satelliteOnMoon = false;
+                currentSatelliteElem = null;
+                // show processed result toast / status
+                setTimeout(()=>{ alert('Processing complete. Satellite returned to Earth.'); },200);
+            });
         }
 
-        function startMoonReveal() {
-            // reveal the full moon and animate earth dot, then navigate to ingestion page
-            if (fullMoon) fullMoon.classList.add('revealed');
-            if (earthDot) {
-                // delay earth growth slightly
-                setTimeout(() => {
-                    earthDot.classList.add('open');
-                }, 600);
-            }
-
-            // navigate after animations complete
-            setTimeout(() => {
-                window.location.href = './img_ingestion.html';
-            }, 2000);
-        }
+        // On window resize, we may need to update SVG sizes; flightPath uses relative 1920x1080 viewport so it's okay
 
     </script>
 </body>
