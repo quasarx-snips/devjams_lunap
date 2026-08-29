@@ -338,9 +338,29 @@
             pointer-events: none;
             z-index: 100;
         }
+
+        /* Expanding circle white flash overlay style */
+        .screen-flash {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.8s cubic-bezier(0.1, 0.8, 0.2, 1);
+        }
+
+        .screen-flash.is-flashing {
+            transform: translate(-50%, -50%) scale(100);
+        }
     </style>
 </head>
 <body>
+
+    <!-- White flash element -->
+    <div class="screen-flash" id="screenFlash"></div>
 
     <canvas id="orbit-canvas"></canvas>
 
@@ -439,6 +459,8 @@
     <script>
         const canvas = document.getElementById('orbit-canvas');
         const ctx = canvas.getContext('2d');
+        const screenFlash = document.getElementById('screenFlash');
+        let hasFlashed = false;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -674,6 +696,13 @@
                     returnProgress += 1 / returnDurationFrames;
                     if (returnProgress >= 1) {
                         returnProgress = 1;
+                        if (!hasFlashed) {
+                            hasFlashed = true;
+                            // Set flash origin to Earth center where the satellite lands
+                            screenFlash.style.left = earthCenterX + 'px';
+                            screenFlash.style.top = earthCenterY + 'px';
+                            screenFlash.classList.add('is-flashing');
+                        }
                     }
                     const t = returnProgress;
                     const easeT = t * t * (3 - 2 * t);
@@ -780,7 +809,7 @@
 
             // Handle the shrinking image animation into the satellite
             if (isShrinking) {
-                shrinkProgress += 0.025; // Speed of shrinking and squeezing
+                shrinkProgress += 0.025; 
                 if (shrinkProgress >= 1) {
                     shrinkProgress = 1;
                     isShrinking = false;
@@ -792,7 +821,7 @@
                     returnStartPos = { x: satX, y: satY };
                 }
 
-                const ease = shrinkProgress * shrinkProgress; // Accelerate inward
+                const ease = shrinkProgress * shrinkProgress; 
                 const currentLeft = (1 - ease) * shrinkStartRect.left + ease * satX;
                 const currentTop = (1 - ease) * shrinkStartRect.top + ease * satY;
                 const currentWidth = (1 - ease) * shrinkStartRect.width;
