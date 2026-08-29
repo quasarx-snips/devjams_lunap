@@ -16,8 +16,8 @@
         body {
             background-color: #05050a;
             color: #ffffff;
-            min-height: 100vh;
-            overflow-x: hidden;
+            height: 100vh;
+            overflow: hidden; /* Ensure no scroll is needed */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -29,20 +29,19 @@
         body::before {
             content: '';
             position: absolute;
-            top: 30%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 800px;
             height: 400px;
-            background: radial-gradient(circle, rgba(120, 50, 255, 0.16) 0%, rgba(5, 5, 10, 0) 70%);
+            background: radial-gradient(circle, rgba(120, 50, 255, 0.18) 0%, rgba(5, 5, 10, 0) 70%);
             z-index: 0;
             pointer-events: none;
         }
 
-        /* Top Navigation Bar */
         header {
             width: 100%;
-            padding: 24px 48px;
+            padding: 16px 36px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -52,26 +51,26 @@
         .gdg-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             text-decoration: none;
             color: #fff;
         }
 
         .gdg-logo svg {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
         }
 
         .gdg-text {
             display: flex;
             flex-direction: column;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             line-height: 1.2;
         }
 
         .gdg-sub {
-            font-size: 10px;
+            font-size: 9px;
             color: #a0a0a0;
             font-weight: 500;
             letter-spacing: 0.5px;
@@ -83,16 +82,15 @@
             gap: 8px;
             cursor: pointer;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
         }
 
-        /* Cartoon Cat Menu Icon matching theme */
         .menu-cat {
-            width: 38px;
-            height: 38px;
+            width: 34px;
+            height: 34px;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300ffcc"><path d="M5 3L8.5 7H15.5L19 3L21 6V11C21 16.5 17 21 12 21C7 21 3 16.5 3 11V6L5 3M8 10C7.45 10 7 10.45 7 11C7 11.55 7.45 12 8 12C8.55 12 9 11.55 9 11C9 10.45 8.55 10 8 10M16 10C15.45 10 15 10.45 15 11C15 11.55 15.45 12 16 12C16.55 12 17 11.55 17 11C17 10.45 16.55 10 16 10M12 14C10.5 14 9.5 14.8 9 15.5C9 16.2 9.8 17 10.5 17C11.1 17 11.5 16.5 12 16.5C12.5 16.5 12.9 17 13.5 17C14.2 17 15 16.2 15 15.5C14.5 14.8 13.5 14 12 14Z"/></svg>') no-repeat center;
-            filter: drop-shadow(0 0 10px rgba(0,255,204,0.7));
+            filter: drop-shadow(0 0 8px rgba(0,255,204,0.7));
             transition: transform 0.3s ease;
         }
 
@@ -100,7 +98,6 @@
             transform: scale(1.1) rotate(6deg);
         }
 
-        /* Main Content */
         .main-container {
             display: flex;
             flex-direction: column;
@@ -108,82 +105,109 @@
             justify-content: center;
             flex: 1;
             width: 100%;
-            max-width: 1350px;
-            padding: 0 24px;
+            max-width: 100vw;
+            padding: 0 20px;
             z-index: 10;
             text-align: center;
-            gap: 16px;
-            margin-top: -20px;
+            gap: 10px;
+            margin-top: -10px;
         }
 
-        /* LunaP Heading with Maximum Scale & Tight Spacing */
+        .hero-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* LunaP Title with overlapping characters */
         .lunap-title {
-            font-size: clamp(7.5rem, 20vw, 20rem);
+            font-size: clamp(8rem, 25vw, 24rem); 
             font-weight: 900;
-            letter-spacing: -8px;
-            line-height: 0.78;
+            letter-spacing: -0.09em;
+            line-height: 0.75;
             display: flex;
             justify-content: center;
             user-select: none;
             position: relative;
-            margin-bottom: -25px;
-            z-index: 4;
+            z-index: 20;
+            margin: 0;
+            pointer-events: none; /* Let clicks pass through the container to the icons */
         }
 
         .char {
             display: inline-block;
             color: #ffffff;
-            -webkit-text-stroke: 1.5px #000000;
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.9);
-            margin-right: -0.06em;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            -webkit-text-stroke: 2px #000000;
+            text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, text-shadow 0.3s ease;
             cursor: default;
+            margin-right: -0.06em;
+            pointer-events: auto; /* Re-enable pointer events for individual letters */
+        }
+        .char:last-child {
+            margin-right: 0;
         }
 
-        .char:hover {
-            transform: translateY(-20px) scale(1.25) rotate(4deg);
-            z-index: 5;
-        }
+        /* Theme-suited interactive hover colors for each character */
+        .char:nth-child(1):hover { color: #a855f7; text-shadow: 0 0 25px rgba(168, 85, 247, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(-3deg); z-index: 25; }
+        .char:nth-child(2):hover { color: #3b82f6; text-shadow: 0 0 25px rgba(59, 130, 246, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(3deg); z-index: 25; }
+        .char:nth-child(3):hover { color: #8b5cf6; text-shadow: 0 0 25px rgba(139, 92, 246, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(-2deg); z-index: 25; }
+        .char:nth-child(4):hover { color: #60a5fa; text-shadow: 0 0 25px rgba(96, 165, 250, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(4deg); z-index: 25; }
+        .char:nth-child(5):hover { color: #c084fc; text-shadow: 0 0 25px rgba(192, 132, 252, 0.9), 4px 4px 0px rgba(0,0,0,0.9); transform: translateY(-18px) scale(1.1) rotate(-4deg); z-index: 25; }
 
-        /* Icons Row positioned right under/overlapping text */
         .icons-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: clamp(16px, 3vw, 36px);
-            flex-wrap: wrap;
-            z-index: 6;
-            margin-top: -10px;
+            flex-wrap: nowrap;
+            z-index: 10;
+            margin-top: clamp(-100px, -14vw, -200px); /* Deepened text overlap for massive text */
+            width: 100%;
+            max-width: 1400px;
         }
 
         .space-icon {
-            width: clamp(75px, 10vw, 115px);
-            height: clamp(75px, 10vw, 115px);
+            width: clamp(140px, 23vw, 320px);
+            height: clamp(140px, 23vw, 320px);
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
             cursor: pointer;
-            filter: drop-shadow(0 10px 20px rgba(110, 40, 255, 0.35));
+            filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
+            aspect-ratio: 1/1; /* Forces strict square box to prevent stretching */
         }
 
-        .space-icon:hover {
-            transform: translateY(-14px) scale(1.18);
-            filter: drop-shadow(0 15px 30px rgba(168, 85, 247, 0.75));
+        /* Enforce robust tight overlap (removes flex gap unreliability) */
+        .space-icon:not(:first-child) {
+            margin-left: clamp(-60px, -9vw, -125px);
         }
 
+        /* Staggered vertical offsets and rotations mimicking DevJams cluster - Scaled up */
+        .space-icon:nth-child(1) { transform: translateY(10px) rotate(-4deg); z-index: 4; }
+        .space-icon:nth-child(2) { transform: translateY(65px) scale(1.15) rotate(2deg); z-index: 3; } /* Moon is positioned larger and lower */
+        .space-icon:nth-child(3) { transform: translateY(-20px) rotate(-2deg); z-index: 2; }
+        .space-icon:nth-child(4) { transform: translateY(30px) rotate(4deg); z-index: 1; }
+
+        .space-icon:nth-child(1):hover { transform: translateY(-15px) scale(1.1) rotate(-4deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
+        .space-icon:nth-child(2):hover { transform: translateY(40px) scale(1.25) rotate(2deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
+        .space-icon:nth-child(3):hover { transform: translateY(-45px) scale(1.1) rotate(-2deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
+        .space-icon:nth-child(4):hover { transform: translateY(5px) scale(1.1) rotate(4deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
+        
         @keyframes jumpBounce1 {
-            0%, 100% { transform: translateY(0) scale(1.08); }
-            50% { transform: translateY(-22px) scale(1.15) rotate(-3deg); }
+            0%, 100% { transform: translateY(10px) scale(1) rotate(-4deg); }
+            50% { transform: translateY(-15px) scale(1.06) rotate(-8deg); }
         }
         @keyframes jumpBounce2 {
-            0%, 100% { transform: translateY(0) scale(1.08); }
-            50% { transform: translateY(-18px) scale(1.14) rotate(4deg); }
+            0%, 100% { transform: translateY(65px) scale(1.15) rotate(2deg); }
+            50% { transform: translateY(35px) scale(1.2) rotate(0deg); }
         }
         @keyframes jumpBounce3 {
-            0%, 100% { transform: translateY(0) scale(1.08); }
-            50% { transform: translateY(-25px) scale(1.18) rotate(-5deg); }
+            0%, 100% { transform: translateY(-20px) scale(1) rotate(-2deg); }
+            50% { transform: translateY(-50px) scale(1.08) rotate(-6deg); }
         }
         @keyframes jumpBounce4 {
-            0%, 100% { transform: translateY(0) scale(1.08); }
-            50% { transform: translateY(-20px) scale(1.16) rotate(3deg); }
+            0%, 100% { transform: translateY(30px) scale(1) rotate(4deg); }
+            50% { transform: translateY(0px) scale(1.06) rotate(2deg); }
         }
 
         .space-icon.jumping:nth-child(1) { animation: jumpBounce1 0.42s ease-in-out infinite; }
@@ -191,56 +215,25 @@
         .space-icon.jumping:nth-child(3) { animation: jumpBounce3 0.39s ease-in-out infinite; }
         .space-icon.jumping:nth-child(4) { animation: jumpBounce4 0.45s ease-in-out infinite; }
 
-        /* LunaP Heading with Larger Scale & Tight Spacing */
-        .lunap-title {
-            font-size: clamp(6rem, 16vw, 16rem);
-            font-weight: 900;
-            letter-spacing: -6px;
-            line-height: 0.82;
-            display: flex;
-            justify-content: center;
-            user-select: none;
-            position: relative;
-            margin-bottom: -15px;
-        }
-
-        .char {
-            display: inline-block;
-            color: #ffffff;
-            -webkit-text-stroke: 1.5px #000000;
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.9);
-            margin-right: -0.06em;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease, text-shadow 0.2s ease;
-            cursor: default;
-        }
-
-        .char:hover {
-            transform: translateY(-24px) scale(1.3) rotate(5deg);
-            color: #ffffff;
-            text-shadow: 5px 10px 0px rgba(0,0,0,0.9);
-            z-index: 5;
-        }
-
-        /* Subtitle */
         .subtitle {
-            font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+            font-size: clamp(1rem, 2vw, 1.35rem);
             font-weight: 600;
-            color: #cbd5e1;
+            color: #ffffff;
             letter-spacing: -0.3px;
-            max-width: 750px;
-            margin-top: 10px;
+            max-width: 700px;
+            margin-top: 30px;
+            z-index: 10;
         }
 
-        /* Proceed Further Button */
         .btn-proceed {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             background: #ffffff;
             color: #05050a;
-            padding: 16px 36px;
+            padding: 14px 32px;
             border-radius: 50px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             text-decoration: none;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -248,6 +241,8 @@
             border: none;
             cursor: pointer;
             margin-top: 5px;
+            margin-bottom: 20px;
+            z-index: 10;
         }
 
         .btn-proceed:hover {
@@ -257,8 +252,8 @@
         }
 
         .btn-proceed svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             transition: transform 0.3s ease;
         }
 
@@ -266,15 +261,14 @@
             transform: translateX(6px);
         }
 
-        /* Toast notification */
         #toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: rgba(168, 85, 247, 0.95);
             color: #fff;
-            padding: 12px 28px;
+            padding: 10px 24px;
             border-radius: 30px;
             font-weight: 600;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -287,7 +281,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Laser Beam Overlay */
         #laser-canvas {
             position: absolute;
             top: 0;
@@ -295,7 +288,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 20;
+            z-index: 30;
         }
     </style>
 </head>
@@ -305,7 +298,6 @@
 
     <div id="toast">Initializing Autonomous Orbital Systems...</div>
 
-    <!-- Header -->
     <header>
         <a href="#" class="gdg-logo">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -326,131 +318,117 @@
 
     <main class="main-container">
         
-        <!-- LunaP Heading First (Matching Reference Portal Layout) -->
-        <h1 class="lunap-title" id="lunap-heading">
-            <span class="char">L</span><span class="char">u</span><span class="char">n</span><span class="char">a</span><span class="char">P</span>
-        </h1>
+        <div class="hero-wrapper">
+            <h1 class="lunap-title" id="lunap-heading">
+                <span class="char">L</span><span class="char">u</span><span class="char">n</span><span class="char">a</span><span class="char">P</span>
+            </h1>
 
-        <!-- 4 Reference Icons overlapping/tucked right under the massive title -->
-        <div class="icons-row">
-            <!-- 1. Satellite Icon (Refined Professional Vector) -->
-            <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="edgyGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#05050a" />
-                        <stop offset="30%" stop-color="#2e1065" />
-                        <stop offset="70%" stop-color="#7c3aed" />
-                        <stop offset="100%" stop-color="#2563eb" />
-                    </linearGradient>
-                </defs>
-                <!-- Left Solar Panel Wing -->
-                <g stroke="#a855f7" stroke-width="2">
-                    <rect x="8" y="38" width="28" height="24" rx="4" fill="url(#edgyGrad1)" />
-                    <line x1="15" y1="38" x2="15" y2="62" stroke="#3b82f6" stroke-width="1.5"/>
-                    <line x1="22" y1="38" x2="22" y2="62" stroke="#3b82f6" stroke-width="1.5"/>
-                    <line x1="29" y1="38" x2="29" y2="62" stroke="#3b82f6" stroke-width="1.5"/>
-                    <line x1="8" y1="50" x2="36" y2="50" stroke="#3b82f6" stroke-width="1.5"/>
-                </g>
-                <!-- Right Solar Panel Wing -->
-                <g stroke="#a855f7" stroke-width="2">
-                    <rect x="64" y="38" width="28" height="24" rx="4" fill="url(#edgyGrad1)" />
-                    <line x1="71" y1="38" x2="71" y2="62" stroke="#3b82f6" stroke-width="1.5"/>
-                    <line x1="78" y1="38" x2="78" y2="62" stroke="#3b82f6" stroke-width="1.5"/>
-                    <line x1="85" y1="38" x2="85" y2="62" stroke="#3b82f6" stroke-width="1.5"/>
-                    <line x1="64" y1="50" x2="92" y2="50" stroke="#3b82f6" stroke-width="1.5"/>
-                </g>
-                <!-- Central Satellite Bus / Body -->
-                <rect x="36" y="32" width="28" height="36" rx="6" fill="url(#edgyGrad1)" stroke="#a855f7" stroke-width="2.5"/>
-                <rect x="42" y="38" width="16" height="12" rx="2" fill="#05050a" stroke="#3b82f6" stroke-width="1.5"/>
-                <circle cx="50" cy="58" r="4" fill="#00ffcc"/>
-                <!-- Communication Dish on Top -->
-                <path d="M42 22C42 17 58 17 58 22" stroke="#a855f7" stroke-width="2" fill="url(#edgyGrad1)" />
-                <line x1="50" y1="22" x2="50" y2="32" stroke="#a855f7" stroke-width="2.5"/>
-                <circle cx="50" cy="20" r="2" fill="#ff2a6d"/>
-                <!-- Antennae / Thrusters -->
-                <path d="M40 68L34 80M60 68L66 80" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
-                <path d="M47 68V76M53 68V76" stroke="#ff2a6d" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+            <div class="icons-row">
+                <!-- 1. Satellite Icon -->
+                <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="smoothGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e1b4b" />
+                            <stop offset="50%" stop-color="#7c3aed" />
+                            <stop offset="100%" stop-color="#2563eb" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="8" y="38" width="28" height="24" rx="6" fill="url(#smoothGrad1)" opacity="0.9" />
+                    <line x1="15" y1="38" x2="15" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <line x1="22" y1="38" x2="22" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <line x1="29" y1="38" x2="29" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    
+                    <rect x="64" y="38" width="28" height="24" rx="6" fill="url(#smoothGrad1)" opacity="0.9" />
+                    <line x1="71" y1="38" x2="71" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <line x1="78" y1="38" x2="78" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
+                    <line x1="85" y1="38" x2="85" y2="62" stroke="#ffffff" stroke-opacity="0.3" stroke-width="2"/>
 
-            <!-- 2. Moon Icon -->
-            <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="edgyGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#05050a" />
-                        <stop offset="35%" stop-color="#312e81" />
-                        <stop offset="70%" stop-color="#8b5cf6" />
-                        <stop offset="100%" stop-color="#ec4899" />
-                    </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r="42" fill="url(#edgyGrad2)" stroke="#a855f7" stroke-width="3"/>
-                <circle cx="38" cy="45" r="9" fill="#05050a" stroke="#7c3aed" stroke-width="2"/>
-                <circle cx="68" cy="62" r="8" fill="#05050a" stroke="#7c3aed" stroke-width="2"/>
-                <circle cx="60" cy="32" r="5" fill="#05050a" stroke="#7c3aed" stroke-width="1.5"/>
-                <circle cx="48" cy="68" r="4" fill="#05050a" stroke="#7c3aed" stroke-width="1.5"/>
-                <circle cx="28" cy="58" r="3.5" fill="#05050a" stroke="#7c3aed" stroke-width="1.5"/>
-                <path d="M22 36C26 32 30 32 32 32" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
-                <path d="M72 45L80 42M74 52L82 49" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+                    <rect x="36" y="32" width="28" height="36" rx="8" fill="url(#smoothGrad1)" />
+                    <rect x="42" y="38" width="16" height="12" rx="3" fill="#05050a" opacity="0.6"/>
+                    <circle cx="50" cy="58" r="4" fill="#00ffcc"/>
+                    <path d="M42 22C42 16 58 16 58 22" fill="url(#smoothGrad1)" />
+                    <line x1="50" y1="22" x2="50" y2="32" stroke="#9333ea" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="50" cy="20" r="2.5" fill="#ff2a6d"/>
+                    <path d="M40 68L34 82M60 68L66 82" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M47 68V76M53 68V76" stroke="#ff2a6d" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
 
-            <!-- 3. Lander Icon -->
-            <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="edgyGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#05050a" />
-                        <stop offset="30%" stop-color="#1e1b4b" />
-                        <stop offset="65%" stop-color="#6d28d9" />
-                        <stop offset="100%" stop-color="#3b82f6" />
-                    </linearGradient>
-                </defs>
-                <line x1="50" y1="8" x2="50" y2="16" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M38 28C38 18 62 18 62 28V34H38V28Z" fill="url(#edgyGrad3)" stroke="#a855f7" stroke-width="2.5"/>
-                <circle cx="50" cy="26" r="8" fill="#05050a" stroke="#3b82f6" stroke-width="2"/>
-                <path d="M46 26C46 24 48 22 50 22V30C48 30 46 28 46 26Z" fill="#ff2a6d"/>
-                <rect x="30" y="34" width="40" height="22" rx="4" fill="url(#edgyGrad3)" stroke="#a855f7" stroke-width="2.5"/>
-                <path d="M30 56H70L62 74H38L30 56Z" fill="url(#edgyGrad3)" stroke="#a855f7" stroke-width="2.5"/>
-                <circle cx="50" cy="65" r="4" fill="#05050a" stroke="#3b82f6" stroke-width="2"/>
-                <path d="M34 74L16 90M66 74L84 90M50 74V90" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round"/>
-                <rect x="12" y="88" width="10" height="4" rx="1" fill="#3b82f6"/>
-                <rect x="78" y="88" width="10" height="4" rx="1" fill="#3b82f6"/>
-                <rect x="44" y="88" width="12" height="4" rx="1" fill="#3b82f6"/>
-            </svg>
+                <!-- 2. Moon Icon -->
+                <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="smoothGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#312e81" />
+                            <stop offset="60%" stop-color="#8b5cf6" />
+                            <stop offset="100%" stop-color="#ec4899" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="44" fill="url(#smoothGrad2)" />
+                    <circle cx="38" cy="45" r="10" fill="#05050a" opacity="0.35"/>
+                    <circle cx="68" cy="62" r="9" fill="#05050a" opacity="0.35"/>
+                    <circle cx="60" cy="32" r="6" fill="#05050a" opacity="0.35"/>
+                    <circle cx="48" cy="68" r="5" fill="#05050a" opacity="0.35"/>
+                    <circle cx="28" cy="58" r="4" fill="#05050a" opacity="0.35"/>
+                </svg>
 
-            <!-- 4. Rover Icon with Optimized Right Arm & Mouse-Tracking Laser Eyes -->
-            <svg class="space-icon" id="lander-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="edgyGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#05050a" />
-                        <stop offset="35%" stop-color="#3b0764" />
-                        <stop offset="70%" stop-color="#7e22ce" />
-                        <stop offset="100%" stop-color="#2563eb" />
-                    </linearGradient>
-                </defs>
-                <!-- Rover Body -->
-                <path d="M22 52L32 34H68L78 52H85V70H15V52H22Z" fill="url(#edgyGrad4)" stroke="#a855f7" stroke-width="3" stroke-linejoin="round"/>
-                <!-- Optimized Robotic Arm & Pincer on Right Top -->
-                <path d="M68 40V24H84V30" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M84 30L94 22M84 30L94 38" stroke="#ff2a6d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                <!-- Head / Optical Sensor Unit -->
-                <rect x="26" y="14" width="48" height="24" rx="12" fill="#05050a" stroke="#a855f7" stroke-width="2.5"/>
-                <!-- Interactive Tracking Eyes -->
-                <circle id="left-pupil" cx="42" cy="26" r="5" fill="#ff2a6d" />
-                <circle id="right-pupil" cx="58" cy="26" r="5" fill="#ff2a6d" />
-                <!-- Central Hatch -->
-                <rect x="40" y="57" width="20" height="8" rx="4" fill="#05050a" stroke="#3b82f6" stroke-width="2"/>
-                <!-- Wheels -->
-                <circle cx="25" cy="78" r="9" fill="#05050a" stroke="#7c3aed" stroke-width="3"/>
-                <circle cx="50" cy="78" r="9" fill="#05050a" stroke="#7c3aed" stroke-width="3"/>
-                <circle cx="75" cy="78" r="9" fill="#05050a" stroke="#7c3aed" stroke-width="3"/>
-                <circle cx="25" cy="78" r="3" fill="#3b82f6"/>
-                <circle cx="50" cy="78" r="3" fill="#3b82f6"/>
-                <circle cx="75" cy="78" r="3" fill="#3b82f6"/>
-            </svg>
+                <!-- 3. Lander Icon -->
+                <svg class="space-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="smoothGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e1b4b" />
+                            <stop offset="50%" stop-color="#6d28d9" />
+                            <stop offset="100%" stop-color="#3b82f6" />
+                        </linearGradient>
+                    </defs>
+                    <line x1="50" y1="8" x2="50" y2="16" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M38 28C38 18 62 18 62 28V34H38V28Z" fill="url(#smoothGrad3)"/>
+                    <circle cx="50" cy="26" r="8" fill="#05050a" opacity="0.5"/>
+                    <path d="M46 26C46 24 48 22 50 22V30C48 30 46 28 46 26Z" fill="#ff2a6d"/>
+                    <rect x="30" y="34" width="40" height="22" rx="6" fill="url(#smoothGrad3)"/>
+                    <path d="M30 56H70L62 74H38L30 56Z" fill="url(#smoothGrad3)"/>
+                    <circle cx="50" cy="65" r="4" fill="#05050a" opacity="0.5"/>
+                    <path d="M34 74L16 90M66 74L84 90M50 74V90" stroke="#a855f7" stroke-width="3" stroke-linecap="round"/>
+                    <rect x="10" y="88" width="12" height="4" rx="2" fill="#3b82f6"/>
+                    <rect x="78" y="88" width="12" height="4" rx="2" fill="#3b82f6"/>
+                    <rect x="44" y="88" width="12" height="4" rx="2" fill="#3b82f6"/>
+                </svg>
+
+                <!-- 4. Rover Icon with Interactive Tracking Eyes -->
+                <svg class="space-icon" id="lander-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="smoothGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3b0764" />
+                            <stop offset="50%" stop-color="#7e22ce" />
+                            <stop offset="100%" stop-color="#2563eb" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Main Body -->
+                    <path d="M22 54L32 36H68L78 54H85V72H15V54H22Z" fill="url(#smoothGrad4)" stroke-linejoin="round"/>
+                    
+                    <!-- Top Head Visor / Eye Enclosure -->
+                    <rect x="24" y="16" width="52" height="24" rx="12" fill="#05050a" stroke="#7e22ce" stroke-width="2.5" opacity="0.95"/>
+                    
+                    <!-- Eye Socket Rings (Anchors for absolute tracking) -->
+                    <circle id="left-eye-base" cx="40" cy="28" r="7" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.5"/>
+                    <circle id="right-eye-base" cx="60" cy="28" r="7" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.5"/>
+                    
+                    <!-- Interactive Tracking Eyes/Pupils -->
+                    <circle id="left-pupil" cx="40" cy="28" r="4" fill="#ff2a6d" style="transition: fill 0.2s ease, filter 0.2s ease;" />
+                    <circle id="right-pupil" cx="60" cy="28" r="4" fill="#ff2a6d" style="transition: fill 0.2s ease, filter 0.2s ease;" />
+                    
+                    <!-- Front Grill & Wheels -->
+                    <rect x="40" y="59" width="20" height="8" rx="4" fill="#05050a" opacity="0.6"/>
+                    <circle cx="25" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
+                    <circle cx="50" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
+                    <circle cx="75" cy="80" r="8.5" fill="#05050a" opacity="0.9"/>
+                    <circle cx="25" cy="80" r="3.5" fill="#3b82f6"/>
+                    <circle cx="50" cy="80" r="3.5" fill="#3b82f6"/>
+                    <circle cx="75" cy="80" r="3.5" fill="#3b82f6"/>
+                </svg>
+            </div>
         </div>
 
-        <!-- Subtitle -->
         <p class="subtitle">Autonomous Hazard-aware lunar surface navigator and analyzer</p>
 
-        <!-- Proceed Further Button -->
         <button class="btn-proceed" id="proceed-btn" onclick="triggerToast()">
             Proceed further
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -479,7 +457,8 @@
         const proceedBtn = document.getElementById('proceed-btn');
         const spaceIcons = document.querySelectorAll('.space-icon');
 
-        // Hover effect on proceed button: Make the 4 space icons jump randomly
+        let currentPupilOffset = { lx: 40, ly: 28, rx: 60, ry: 28 };
+
         proceedBtn.addEventListener('mouseenter', () => {
             spaceIcons.forEach(icon => icon.classList.add('jumping'));
         });
@@ -495,80 +474,96 @@
         resizeCanvas();
 
         function updateRoverEyes() {
-            const rect = landerSvg.getBoundingClientRect();
-            if (rect.width === 0) return;
-            const scaleX = rect.width / 100;
-            const scaleY = rect.height / 100;
+            const lBaseRect = document.getElementById('left-eye-base').getBoundingClientRect();
+            const rBaseRect = document.getElementById('right-eye-base').getBoundingClientRect();
+            
+            // Abort seamlessly if not fully rendered yet
+            if(lBaseRect.width === 0) return;
 
-            const leftEyeBaseX = rect.left + 42 * scaleX;
-            const leftEyeBaseY = rect.top + 26 * scaleY;
-            const rightEyeBaseX = rect.left + 58 * scaleX;
-            const rightEyeBaseY = rect.top + 26 * scaleY;
+            // Get absolute screen centers of the eye sockets
+            const lx = lBaseRect.left + lBaseRect.width / 2;
+            const ly = lBaseRect.top + lBaseRect.height / 2;
+            const rx = rBaseRect.left + rBaseRect.width / 2;
+            const ry = rBaseRect.top + rBaseRect.height / 2;
 
-            const angleLeft = Math.atan2(mouseY - leftEyeBaseY, mouseX - leftEyeBaseX);
-            const angleRight = Math.atan2(mouseY - rightEyeBaseY, mouseX - rightEyeBaseX);
+            const angleLeft = Math.atan2(mouseY - ly, mouseX - lx);
+            const angleRight = Math.atan2(mouseY - ry, mouseX - rx);
 
-            const maxDist = 3.5;
-            leftPupil.setAttribute('cx', 42 + Math.cos(angleLeft) * maxDist);
-            leftPupil.setAttribute('cy', 26 + Math.sin(angleLeft) * maxDist);
-            rightPupil.setAttribute('cx', 58 + Math.cos(angleRight) * maxDist);
-            rightPupil.setAttribute('cy', 26 + Math.sin(angleRight) * maxDist);
+            const maxDist = 2.5; // Max offset within the viewBox
+            currentPupilOffset.lx = 40 + Math.cos(angleLeft) * maxDist;
+            currentPupilOffset.ly = 28 + Math.sin(angleLeft) * maxDist;
+            currentPupilOffset.rx = 60 + Math.cos(angleRight) * maxDist;
+            currentPupilOffset.ry = 28 + Math.sin(angleRight) * maxDist;
+
+            leftPupil.setAttribute('cx', currentPupilOffset.lx);
+            leftPupil.setAttribute('cy', currentPupilOffset.ly);
+            rightPupil.setAttribute('cx', currentPupilOffset.rx);
+            rightPupil.setAttribute('cy', currentPupilOffset.ry);
         }
 
-        // Render Loop for High-Speed Laser Beams (Red when away, Green when near button)
         let laserPulse = 0;
+        
         function renderLasers() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const rect = landerSvg.getBoundingClientRect();
-            if (rect.width > 0) {
-                const scaleX = rect.width / 100;
-                const scaleY = rect.height / 100;
+            const btnRect = proceedBtn.getBoundingClientRect();
+            const btnCenterX = btnRect.left + btnRect.width / 2;
+            const btnCenterY = btnRect.top + btnRect.height / 2;
+            const distToBtn = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
 
-                const leftEyeX = rect.left + 42 * scaleX;
-                const leftEyeY = rect.top + 26 * scaleY;
-                const rightEyeX = rect.left + 58 * scaleX;
-                const rightEyeY = rect.top + 26 * scaleY;
+            const isNearButton = distToBtn < 150 || (mouseX >= btnRect.left - 50 && mouseX <= btnRect.right + 50 && mouseY >= btnRect.top - 50 && mouseY <= btnRect.bottom + 50);
+            
+            // Determine active target color
+            const laserColor = isNearButton ? '#00ffcc' : '#ff2a6d';
 
-                // Check distance to "Proceed further" button
-                const btnRect = proceedBtn.getBoundingClientRect();
-                const btnCenterX = btnRect.left + btnRect.width / 2;
-                const btnCenterY = btnRect.top + btnRect.height / 2;
-                const distToBtn = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
+            // Visually sync pupils to current laser mode
+            leftPupil.setAttribute('fill', laserColor);
+            rightPupil.setAttribute('fill', laserColor);
+            leftPupil.style.filter = `drop-shadow(0 0 8px ${laserColor})`;
+            rightPupil.style.filter = `drop-shadow(0 0 8px ${laserColor})`;
 
-                const isNearButton = distToBtn < 150 || (mouseX >= btnRect.left - 50 && mouseX <= btnRect.right + 50 && mouseY >= btnRect.top - 50 && mouseY <= btnRect.bottom + 50);
-                
-                const laserColor = isNearButton ? '#00ffcc' : '#ff2a6d';
-
-                laserPulse += 0.3;
-                const alpha = 0.85 + Math.sin(laserPulse) * 0.15;
-
-                // Left Eye Laser Beam
-                ctx.beginPath();
-                ctx.moveTo(leftEyeX, leftEyeY);
-                ctx.lineTo(mouseX, mouseY);
-                ctx.strokeStyle = isNearButton ? `rgba(0, 255, 204, ${alpha})` : `rgba(255, 42, 109, ${alpha})`;
-                ctx.lineWidth = 2.5;
-                ctx.shadowColor = laserColor;
-                ctx.shadowBlur = 18;
-                ctx.stroke();
-
-                // Right Eye Laser Beam
-                ctx.beginPath();
-                ctx.moveTo(rightEyeX, rightEyeY);
-                ctx.lineTo(mouseX, mouseY);
-                ctx.strokeStyle = isNearButton ? `rgba(0, 255, 204, ${alpha})` : `rgba(255, 42, 109, ${alpha})`;
-                ctx.lineWidth = 2.5;
-                ctx.shadowColor = laserColor;
-                ctx.shadowBlur = 18;
-                ctx.stroke();
-
-                // Target Lock Glow at Mouse
-                ctx.beginPath();
-                ctx.arc(mouseX, mouseY, isNearButton ? 8 : 6, 0, Math.PI * 2);
-                ctx.fillStyle = isNearButton ? 'rgba(0, 255, 204, 0.9)' : 'rgba(255, 42, 109, 0.9)';
-                ctx.fill();
+            // Get foolproof screen origins for beams direct from the pupil nodes
+            const lRect = leftPupil.getBoundingClientRect();
+            const rRect = rightPupil.getBoundingClientRect();
+            
+            if (lRect.width === 0) {
+                requestAnimationFrame(renderLasers);
+                return;
             }
+
+            const startLX = lRect.left + lRect.width / 2;
+            const startLY = lRect.top + lRect.height / 2;
+            const startRX = rRect.left + rRect.width / 2;
+            const startRY = rRect.top + rRect.height / 2;
+
+            laserPulse += 0.3;
+            const alpha = 0.85 + Math.sin(laserPulse) * 0.15;
+
+            // Left Laser Beam
+            ctx.beginPath();
+            ctx.moveTo(startLX, startLY);
+            ctx.lineTo(mouseX, mouseY);
+            ctx.strokeStyle = isNearButton ? `rgba(0, 255, 204, ${alpha})` : `rgba(255, 42, 109, ${alpha})`;
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = laserColor;
+            ctx.shadowBlur = 18;
+            ctx.stroke();
+
+            // Right Laser Beam
+            ctx.beginPath();
+            ctx.moveTo(startRX, startRY);
+            ctx.lineTo(mouseX, mouseY);
+            ctx.strokeStyle = isNearButton ? `rgba(0, 255, 204, ${alpha})` : `rgba(255, 42, 109, ${alpha})`;
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = laserColor;
+            ctx.shadowBlur = 18;
+            ctx.stroke();
+
+            // Target Lock Glow at Mouse
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, isNearButton ? 8 : 6, 0, Math.PI * 2);
+            ctx.fillStyle = isNearButton ? 'rgba(0, 255, 204, 0.9)' : 'rgba(255, 42, 109, 0.9)';
+            ctx.fill();
 
             requestAnimationFrame(renderLasers);
         }
@@ -579,7 +574,7 @@
             const toast = document.getElementById('toast');
             toast.classList.add('show');
             setTimeout(() => {
-                toast.classList.remove('string') || toast.classList.remove('show');
+                toast.classList.remove('show');
             }, 3000);
         }
     </script>
