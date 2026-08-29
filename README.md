@@ -49,6 +49,10 @@ Primary sources identified for the prototype include:
     *   [LROC QuickMap](https://quickmap.lroc.im-ldi.com/)
 *   **NASA CGI Moon Kit:** Provides LROC-derived color and LOLA elevation products for visualization.
     *   [NASA SVS — CGI Moon Kit](https://svs.gsfc.nasa.gov/4720)
+*   **DOORs :** Available on Zenodo. Provides boulder segmentation dataset.
+    *   [DOORS Dataset in Zenodo](https://zenodo.org/records/7107409)
+*   **Crater Binary Segmentation:** Model available on HuggingFace for identifying craters.
+    *   [Hugging Face Dataset](https://huggingface.co/datasets/gremlin97/crater_binary_segmentation)
 *  **More Datasets are being explored to solve the problem statement more efficiently.**
 
 ## Core System Flow
