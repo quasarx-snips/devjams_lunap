@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orbit View - LunaP | Team KompilerZ</title>
+    <title>Upload Page - LunaP | Team KompilerZ</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -23,6 +23,16 @@
             justify-content: space-between;
             align-items: center;
             position: relative;
+            animation: launchImpactShake 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        @keyframes launchImpactShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-3px, 3px) rotate(-0.3deg); }
+            40% { transform: translate(3px, -2px) rotate(0.3deg); }
+            60% { transform: translate(-2px, 1px) rotate(-0.1deg); }
+            80% { transform: translate(1px, -1px) rotate(0.05deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
         }
 
         header {
@@ -117,26 +127,35 @@
             margin-top: 18px;
             margin-bottom: 20px;
             visibility: hidden;
+            pointer-events: auto;
+            cursor: pointer;
+            background: linear-gradient(135deg, #00ffcc, #38bdf8);
+            border: none;
+            color: #05050a;
+            font-weight: 800;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
         }
 
-        /* =========================================================
-           MOON LAYOUT LOCK + ENTRY SHAKE ANIMATION
-           ========================================================= */
+        .btn-proceed:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.7);
+        }
+
         .moon-settled {
             visibility: visible;
             width: clamp(140px, 23vw, 320px);
             height: clamp(140px, 23vw, 320px);
             aspect-ratio: 1/1;
-            /* Exact layout match position */
             transform: translate(clamp(-240px, -24vw, -130px), clamp(40px, 6vw, 90px)) scale(calc(90vh / clamp(140px, 23vw, 320px))) rotate(-720deg) !important;
             filter: drop-shadow(0 0 110px rgba(255, 255, 255, 0.85));
-            z-index: 50;
+            z-index: 100;
         }
 
         .moon-animator {
             width: 100%;
             height: 100%;
-            /* Replicates the landing page impact drop and shake */
             animation: moonImpactShake 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
@@ -160,16 +179,38 @@
             }
         }
 
+        @keyframes spinMoon {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .moon-rotator {
+            width: 100%;
+            height: 100%;
+            transform-origin: center;
+            animation: spinMoon 50s linear infinite;
+        }
+
         .hanging-earth-wrapper {
             position: absolute;
             top: -45px;
-            left: 75%;
+            left: 90%;
             transform: translateX(-50%) translateY(0px);
             transform-origin: top center;
             z-index: 55;
             pointer-events: none;
             width: 180px;
             height: 380px;
+        }
+
+        @keyframes spinEarth {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .earth-globe {
+            transform-origin: 90px 325px;
+            animation: spinEarth 30s linear infinite;
         }
 
         #orbit-canvas {
@@ -179,7 +220,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 58;
+            z-index: 2;
         }
 
         .upload-ui-layer {
@@ -187,7 +228,7 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: 60;
-            pointer-events: auto;
+            pointer-events: none;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -216,7 +257,7 @@
             </defs>
             <circle cx="90" cy="4" r="3.5" fill="#94a3b8" />
             <line x1="90" y1="4" x2="90" y2="280" stroke="rgba(255, 255, 255, 0.35)" stroke-width="1.2" stroke-linecap="round" />
-            <g filter="url(#earthGlow)">
+            <g filter="url(#earthGlow)" class="earth-globe">
                 <circle cx="90" cy="325" r="48" fill="none" stroke="rgba(56, 189, 248, 0.35)" stroke-width="2" />
                 <circle cx="90" cy="325" r="44" fill="url(#earthGrad)" />
                 <path d="M70 305 C 78 295, 95 300, 102 312 C 110 325, 98 342, 85 346 C 72 350, 60 332, 70 305 Z" fill="url(#landGrad)" opacity="0.85" />
@@ -248,35 +289,36 @@
 
             <div class="icons-row">
                 <div class="space-icon"></div>
-                
-                <!-- MOON WITH LOCK POSITION & ENTRY SHAKE -->
                 <div class="moon-settled">
                     <div class="moon-animator">
-                        <svg class="space-icon" style="width:100%; height:100%; visibility:visible;" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="smoothGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#f1f5f9" />
-                                    <stop offset="60%" stop-color="#94a3b8" />
-                                    <stop offset="100%" stop-color="#334155" />
-                                </linearGradient>
-                            </defs>
-                            <circle cx="50" cy="50" r="44" fill="url(#smoothGrad2)" />
-                            <circle cx="38" cy="45" r="10" fill="#1e293b" opacity="0.6"/>
-                            <circle cx="68" cy="62" r="9" fill="#1e293b" opacity="0.6"/>
-                            <circle cx="60" cy="32" r="6" fill="#1e293b" opacity="0.6"/>
-                            <circle cx="48" cy="68" r="5" fill="#1e293b" opacity="0.6"/>
-                            <circle cx="28" cy="58" r="4" fill="#1e293b" opacity="0.6"/>
-                        </svg>
+                        <div class="moon-rotator">
+                            <svg class="space-icon" style="width:100%; height:100%; visibility:visible;" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="smoothGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#f1f5f9" />
+                                        <stop offset="60%" stop-color="#94a3b8" />
+                                        <stop offset="100%" stop-color="#334155" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="50" cy="50" r="44" fill="url(#smoothGrad2)" />
+                                <circle cx="38" cy="45" r="10" fill="#1e293b" opacity="0.6"/>
+                                <circle cx="68" cy="62" r="9" fill="#1e293b" opacity="0.6"/>
+                                <circle cx="60" cy="32" r="6" fill="#1e293b" opacity="0.6"/>
+                                <circle cx="48" cy="68" r="5" fill="#1e293b" opacity="0.6"/>
+                                <circle cx="28" cy="58" r="4" fill="#1e293b" opacity="0.6"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-
                 <div class="space-icon"></div>
                 <div class="space-icon"></div>
             </div>
         </div>
 
         <p class="subtitle">Autonomous Hazard-aware lunar surface navigator and analyzer</p>
-        <button class="btn-proceed">Proceed further</button>
+        
+        <button class="btn-proceed" id="uploadBtn">Upload Image & Launch</button>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
     </main>
 
     <div class="upload-ui-layer"></div>
@@ -292,11 +334,64 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
+        let missionState = 'EARTH_ORBIT';
+        let previousMissionState = 'EARTH_ORBIT';
+
         let eccentricAnomaly = 0;
         const semiMajorAxis = 96; 
         const semiMinorAxis = 96; 
         const eccentricity = 0.22; 
         const inclination = Math.PI / 4; 
+
+        let transferProgress = 0;
+        const transferDurationFrames = 180; 
+        let transferStartPos = { x: 0, y: 0 };
+        let lunarOrbitAngle = 0;
+        let scaleFactor = 1.0;
+
+        let spawnFrames = 0;
+        const spawnDuration = 80;
+
+        let lunarSpawnFrames = 80;
+        const lunarSpawnDuration = 80;
+        let lunarSpawnPos = { x: 0, y: 0 };
+
+        const uploadBtn = document.getElementById('uploadBtn');
+        const imageInput = document.getElementById('imageInput');
+
+        setTimeout(() => {
+            uploadBtn.style.visibility = 'visible';
+        }, 800);
+
+        uploadBtn.addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                uploadBtn.style.display = 'none';
+                
+                const earthRect = document.getElementById('earthWrapper').getBoundingClientRect();
+                const earthCenterX = earthRect.left + earthRect.width / 2;
+                const earthCenterY = earthRect.top + 325;
+                
+                const x_orb = semiMajorAxis * (Math.cos(eccentricAnomaly) - eccentricity);
+                const y_orb = semiMinorAxis * Math.sqrt(1 - eccentricity * eccentricity) * Math.sin(eccentricAnomaly);
+                const cosI = Math.cos(inclination);
+                const sinI = Math.sin(inclination);
+                
+                transferStartPos = {
+                    x: earthCenterX + (x_orb * cosI - y_orb * sinI),
+                    y: earthCenterY + (x_orb * sinI + y_orb * cosI)
+                };
+
+                missionState = 'TLI_BURN';
+                setTimeout(() => {
+                    missionState = 'TRANSFER';
+                    transferProgress = 0;
+                }, 600);
+            }
+        });
 
         function renderOrbit() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -305,23 +400,170 @@
             const earthCenterX = earthRect.left + earthRect.width / 2;
             const earthCenterY = earthRect.top + 325; 
 
-            const meanMotion = 0.012;
-            eccentricAnomaly += meanMotion * (1 / (1 - eccentricity * Math.cos(eccentricAnomaly)));
+            const moonElement = document.querySelector('.moon-settled');
+            const moonRect = moonElement.getBoundingClientRect();
+            const moonCenterX = moonRect.left + moonRect.width / 2;
+            const moonCenterY = moonRect.top + moonRect.height / 2;
 
-            const x_orb = semiMajorAxis * (Math.cos(eccentricAnomaly) - eccentricity);
-            const y_orb = semiMinorAxis * Math.sqrt(1 - eccentricity * eccentricity) * Math.sin(eccentricAnomaly);
+            let satX = 0, satY = 0, currentRotation = 0;
 
-            const cosI = Math.cos(inclination);
-            const sinI = Math.sin(inclination);
-            const x_rot = x_orb * cosI - y_orb * sinI;
-            const y_rot = x_orb * sinI + y_orb * cosI;
+            if (missionState === 'EARTH_ORBIT' || missionState === 'TLI_BURN') {
+                const meanMotion = 0.012;
+                eccentricAnomaly += meanMotion * (1 / (1 - eccentricity * Math.cos(eccentricAnomaly)));
 
-            const satX = earthCenterX + x_rot;
-            const satY = earthCenterY + y_rot;
+                const x_orb = semiMajorAxis * (Math.cos(eccentricAnomaly) - eccentricity);
+                const y_orb = semiMinorAxis * Math.sqrt(1 - eccentricity * eccentricity) * Math.sin(eccentricAnomaly);
+
+                const cosI = Math.cos(inclination);
+                const sinI = Math.sin(inclination);
+                const x_rot = x_orb * cosI - y_orb * sinI;
+                const y_rot = x_orb * sinI + y_orb * cosI;
+
+                satX = earthCenterX + x_rot;
+                satY = earthCenterY + y_rot;
+                currentRotation = eccentricAnomaly + Math.PI / 4;
+
+                if (missionState === 'TLI_BURN') {
+                    ctx.save();
+                    ctx.translate(satX, satY);
+                    ctx.rotate(currentRotation);
+                    ctx.beginPath();
+                    ctx.moveTo(-18, 0);
+                    ctx.lineTo(-35 - Math.random() * 15, 0);
+                    ctx.strokeStyle = '#00ffcc';
+                    ctx.lineWidth = 4;
+                    ctx.shadowColor = '#00ffcc';
+                    ctx.shadowBlur = 15;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            } 
+            else if (missionState === 'TRANSFER') {
+                transferProgress += 1 / transferDurationFrames;
+                if (transferProgress >= 1) {
+                    missionState = 'LOI_BURN';
+                    setTimeout(() => {
+                        missionState = 'LUNAR_ORBIT';
+                    }, 500);
+                    transferProgress = 1;
+                }
+
+                const t = transferProgress;
+                const easeT = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+
+                const controlX = (transferStartPos.x + moonCenterX) / 2 - 80;
+                const controlY = (transferStartPos.y + moonCenterY) / 2 - 120;
+
+                satX = (1 - easeT) * (1 - easeT) * transferStartPos.x + 2 * (1 - easeT) * easeT * controlX + easeT * easeT * moonCenterX;
+                satY = (1 - easeT) * (1 - easeT) * transferStartPos.y + 2 * (1 - easeT) * easeT * controlY + easeT * easeT * moonCenterY;
+                
+                scaleFactor = 1.0 + (easeT * 0.4);
+                currentRotation = easeT * Math.PI * 2;
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(satX, satY, 12 * scaleFactor, 0, Math.PI * 2);
+                const exhaustGrad = ctx.createRadialGradient(satX, satY, 0, satX, satY, 16 * scaleFactor);
+                exhaustGrad.addColorStop(0, 'rgba(0, 255, 204, 0.8)');
+                exhaustGrad.addColorStop(1, 'rgba(0, 255, 204, 0)');
+                ctx.fillStyle = exhaustGrad;
+                ctx.fill();
+                ctx.restore();
+            } 
+            else if (missionState === 'LOI_BURN') {
+                satX = moonCenterX - 375;
+                satY = moonCenterY;
+                scaleFactor = 1.4;
+                currentRotation += 0.1;
+
+                ctx.save();
+                ctx.translate(satX, satY);
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(25 + Math.random() * 10, 15);
+                ctx.strokeStyle = '#ff2a6d';
+                ctx.lineWidth = 3;
+                ctx.shadowColor = '#ff2a6d';
+                ctx.shadowBlur = 20;
+                ctx.stroke();
+                ctx.restore();
+            }
+            else if (missionState === 'LUNAR_ORBIT') {
+                lunarOrbitAngle += 0.015;
+                const orbitRadiusX = 375;
+                const orbitRadiusY = 240;
+                satX = moonCenterX + Math.cos(lunarOrbitAngle) * orbitRadiusX;
+                satY = moonCenterY + Math.sin(lunarOrbitAngle) * orbitRadiusY;
+                scaleFactor = 1.35; 
+                currentRotation = lunarOrbitAngle + Math.PI / 2;
+
+                ctx.beginPath();
+                ctx.ellipse(moonCenterX, moonCenterY, orbitRadiusX, orbitRadiusY, 0, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(0, 255, 204, 0.25)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+
+            if (missionState === 'LUNAR_ORBIT' && previousMissionState !== 'LUNAR_ORBIT') {
+                lunarSpawnFrames = 0;
+                lunarSpawnPos = { x: satX, y: satY };
+            }
+            previousMissionState = missionState;
+
+            if (spawnFrames < spawnDuration) {
+                const progress = spawnFrames / spawnDuration;
+                ctx.save();
+                
+                const init_x_orb = semiMajorAxis * (Math.cos(0) - eccentricity);
+                const init_y_orb = 0;
+                const cosI = Math.cos(inclination);
+                const sinI = Math.sin(inclination);
+                const initX = earthCenterX + (init_x_orb * cosI - init_y_orb * sinI);
+                const initY = earthCenterY + (init_x_orb * sinI + init_y_orb * cosI);
+
+                ctx.translate(initX, initY);
+
+                ctx.beginPath();
+                ctx.arc(0, 0, progress * 80, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(0, 255, 204, ${1 - progress})`;
+                ctx.lineWidth = 2.5 * (1 - progress);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(0, 0, progress * 45, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - progress) * 0.8})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.restore();
+                spawnFrames++;
+            }
+
+            if (lunarSpawnFrames < lunarSpawnDuration) {
+                const progress = lunarSpawnFrames / lunarSpawnDuration;
+                ctx.save();
+                ctx.translate(lunarSpawnPos.x, lunarSpawnPos.y);
+
+                ctx.beginPath();
+                ctx.arc(0, 0, progress * 80, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(0, 255, 204, ${1 - progress})`;
+                ctx.lineWidth = 2.5 * (1 - progress);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(0, 0, progress * 45, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - progress) * 0.8})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.restore();
+                lunarSpawnFrames++;
+            }
 
             ctx.save();
             ctx.translate(satX, satY);
-            ctx.rotate(eccentricAnomaly + Math.PI / 4);
+            ctx.rotate(currentRotation);
+            ctx.scale(scaleFactor, scaleFactor);
 
             ctx.shadowColor = '#00ffcc';
             ctx.shadowBlur = 18;
