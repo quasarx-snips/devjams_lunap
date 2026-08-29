@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit View - LunaP | Team KompilerZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: #05050a;
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        header {
+            width: 100%;
+            padding: 16px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 70;
+            opacity: 0;
+            animation: fadeInHeader 1s ease 0.5s forwards;
+        }
+
+        @keyframes fadeInHeader { to { opacity: 1; } }
+
+        .gdg-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .gdg-logo svg { width: 28px; height: 28px; }
+        .gdg-text { display: flex; flex-direction: column; font-size: 13px; font-weight: 700; line-height: 1.2; }
+        .gdg-sub { font-size: 9px; color: #a0a0a0; font-weight: 500; letter-spacing: 0.5px; }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            width: 100%;
+            max-width: 100vw;
+            padding: 0 20px;
+            z-index: 10;
+            text-align: center;
+            gap: 10px;
+            margin-top: -10px;
+            pointer-events: none;
+        }
+
+        .hero-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .lunap-title {
+            font-size: clamp(8rem, 25vw, 24rem); 
+            font-weight: 900;
+            letter-spacing: -0.09em;
+            line-height: 0.75;
+            margin: 0;
+            visibility: hidden;
+        }
+
+        .icons-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap;
+            z-index: 10;
+            margin-top: clamp(-100px, -14vw, -200px);
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        .space-icon {
+            width: clamp(140px, 23vw, 320px);
+            height: clamp(140px, 23vw, 320px);
+            aspect-ratio: 1/1;
+            visibility: hidden;
+        }
+
+        .space-icon:not(:first-child) {
+            margin-left: clamp(-60px, -9vw, -125px);
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2vw, 1.35rem);
+            margin-top: 42px;
+            visibility: hidden;
+        }
+
+        .btn-proceed {
+            padding: 14px 32px;
+            font-size: 1rem;
+            margin-top: 18px;
+            margin-bottom: 20px;
+            visibility: hidden;
+        }
+
+        /* =========================================================
+           MOON LAYOUT LOCK + ENTRY SHAKE ANIMATION
+           ========================================================= */
+        .moon-settled {
+            visibility: visible;
+            width: clamp(140px, 23vw, 320px);
+            height: clamp(140px, 23vw, 320px);
+            aspect-ratio: 1/1;
+            /* Exact layout match position */
+            transform: translate(clamp(-240px, -24vw, -130px), clamp(40px, 6vw, 90px)) scale(calc(90vh / clamp(140px, 23vw, 320px))) rotate(-720deg) !important;
+            filter: drop-shadow(0 0 110px rgba(255, 255, 255, 0.85));
+            z-index: 50;
+        }
+
+        .moon-animator {
+            width: 100%;
+            height: 100%;
+            /* Replicates the landing page impact drop and shake */
+            animation: moonImpactShake 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes moonImpactShake {
+            0% {
+                transform: translateY(-90px) scale(1.25);
+                opacity: 0;
+            }
+            45% {
+                transform: translateY(0) scale(0.93);
+                opacity: 1;
+            }
+            65% {
+                transform: translateY(14px) scale(1.04);
+            }
+            82% {
+                transform: translateY(-6px) scale(0.98);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .hanging-earth-wrapper {
+            position: absolute;
+            top: -45px;
+            left: 75%;
+            transform: translateX(-50%) translateY(0px);
+            transform-origin: top center;
+            z-index: 55;
+            pointer-events: none;
+            width: 180px;
+            height: 380px;
+        }
+
+        #orbit-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 58;
+        }
+
+        .upload-ui-layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 60;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="orbit-canvas"></canvas>
+
+    <div class="hanging-earth-wrapper" id="earthWrapper">
+        <svg viewBox="0 0 180 380" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+            <defs>
+                <linearGradient id="earthGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8" />
+                    <stop offset="50%" stop-color="#2563eb" />
+                    <stop offset="100%" stop-color="#1e3a8a" />
+                </linearGradient>
+                <linearGradient id="landGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#4ade80" />
+                    <stop offset="100%" stop-color="#166534" />
+                </linearGradient>
+                <filter id="earthGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#38bdf8" flood-opacity="0.65"/>
+                </filter>
+            </defs>
+            <circle cx="90" cy="4" r="3.5" fill="#94a3b8" />
+            <line x1="90" y1="4" x2="90" y2="280" stroke="rgba(255, 255, 255, 0.35)" stroke-width="1.2" stroke-linecap="round" />
+            <g filter="url(#earthGlow)">
+                <circle cx="90" cy="325" r="48" fill="none" stroke="rgba(56, 189, 248, 0.35)" stroke-width="2" />
+                <circle cx="90" cy="325" r="44" fill="url(#earthGrad)" />
+                <path d="M70 305 C 78 295, 95 300, 102 312 C 110 325, 98 342, 85 346 C 72 350, 60 332, 70 305 Z" fill="url(#landGrad)" opacity="0.85" />
+                <path d="M98 332 C 106 324, 122 328, 118 344 C 114 360, 102 356, 98 332 Z" fill="url(#landGrad)" opacity="0.85" />
+                <path d="M64 326 C 56 318, 48 330, 56 342 C 64 354, 72 338, 64 326 Z" fill="url(#landGrad)" opacity="0.85" />
+            </g>
+        </svg>
+    </div>
+
+    <header>
+        <a href="landing_page.html" class="gdg-logo">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 8L3 12L7 16" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M17 8L21 12L17 16" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 6L10 18" stroke="#00ffcc" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <div class="gdg-text">
+                Team KompilerZ
+                <span class="gdg-sub">DevJams'26 • Gravitas • GDG</span>
+            </div>
+        </a>
+    </header>
+
+    <main class="main-container" aria-hidden="true">
+        <div class="hero-wrapper">
+            <h1 class="lunap-title">
+                <span class="char">L</span><span class="char">u</span><span class="char">n</span><span class="char">a</span><span class="char">P</span>
+            </h1>
+
+            <div class="icons-row">
+                <div class="space-icon"></div>
+                
+                <!-- MOON WITH LOCK POSITION & ENTRY SHAKE -->
+                <div class="moon-settled">
+                    <div class="moon-animator">
+                        <svg class="space-icon" style="width:100%; height:100%; visibility:visible;" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="smoothGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#f1f5f9" />
+                                    <stop offset="60%" stop-color="#94a3b8" />
+                                    <stop offset="100%" stop-color="#334155" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="44" fill="url(#smoothGrad2)" />
+                            <circle cx="38" cy="45" r="10" fill="#1e293b" opacity="0.6"/>
+                            <circle cx="68" cy="62" r="9" fill="#1e293b" opacity="0.6"/>
+                            <circle cx="60" cy="32" r="6" fill="#1e293b" opacity="0.6"/>
+                            <circle cx="48" cy="68" r="5" fill="#1e293b" opacity="0.6"/>
+                            <circle cx="28" cy="58" r="4" fill="#1e293b" opacity="0.6"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="space-icon"></div>
+                <div class="space-icon"></div>
+            </div>
+        </div>
+
+        <p class="subtitle">Autonomous Hazard-aware lunar surface navigator and analyzer</p>
+        <button class="btn-proceed">Proceed further</button>
+    </main>
+
+    <div class="upload-ui-layer"></div>
+
+    <script>
+        const canvas = document.getElementById('orbit-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let eccentricAnomaly = 0;
+        const semiMajorAxis = 96; 
+        const semiMinorAxis = 96; 
+        const eccentricity = 0.22; 
+        const inclination = Math.PI / 4; 
+
+        function renderOrbit() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const earthRect = document.getElementById('earthWrapper').getBoundingClientRect();
+            const earthCenterX = earthRect.left + earthRect.width / 2;
+            const earthCenterY = earthRect.top + 325; 
+
+            const meanMotion = 0.012;
+            eccentricAnomaly += meanMotion * (1 / (1 - eccentricity * Math.cos(eccentricAnomaly)));
+
+            const x_orb = semiMajorAxis * (Math.cos(eccentricAnomaly) - eccentricity);
+            const y_orb = semiMinorAxis * Math.sqrt(1 - eccentricity * eccentricity) * Math.sin(eccentricAnomaly);
+
+            const cosI = Math.cos(inclination);
+            const sinI = Math.sin(inclination);
+            const x_rot = x_orb * cosI - y_orb * sinI;
+            const y_rot = x_orb * sinI + y_orb * cosI;
+
+            const satX = earthCenterX + x_rot;
+            const satY = earthCenterY + y_rot;
+
+            ctx.save();
+            ctx.translate(satX, satY);
+            ctx.rotate(eccentricAnomaly + Math.PI / 4);
+
+            ctx.shadowColor = '#00ffcc';
+            ctx.shadowBlur = 18;
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(-18, -4, 36, 8);
+            ctx.strokeStyle = '#bae6fd';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(-18, -4, 36, 8);
+
+            ctx.fillStyle = '#7c3aed';
+            ctx.fillRect(-7, -7, 14, 14);
+            ctx.strokeStyle = '#00ffcc';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(-7, -7, 14, 14);
+
+            ctx.beginPath();
+            ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#ff2a6d';
+            ctx.fill();
+
+            ctx.restore();
+            requestAnimationFrame(renderOrbit);
+        }
+
+        requestAnimationFrame(renderOrbit);
+    </script>
+</body>
+</html>
