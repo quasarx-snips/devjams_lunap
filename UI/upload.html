@@ -61,18 +61,16 @@
         .gdg-sub { font-size: 9px; color: #a0a0a0; font-weight: 500; letter-spacing: 0.5px; }
 
         .main-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex: 1;
-            width: 100%;
-            max-width: 100vw;
-            padding: 0 20px;
             z-index: 10;
-            text-align: center;
-            gap: 10px;
-            margin-top: -10px;
             pointer-events: none;
         }
 
@@ -81,7 +79,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             width: 100%;
+            height: 100%;
         }
 
         .lunap-title {
@@ -94,14 +94,12 @@
         }
 
         .icons-row {
+            position: absolute;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-wrap: nowrap;
             z-index: 10;
-            margin-top: clamp(-100px, -14vw, -200px);
             width: 100%;
-            max-width: 1400px;
         }
 
         .space-icon {
@@ -111,21 +109,48 @@
             visibility: hidden;
         }
 
-        .space-icon:not(:first-child) {
-            margin-left: clamp(-60px, -9vw, -125px);
+        /* Perfectly centered content overlay on top of the moon */
+        .content-overlay {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 150;
+            transform: translate(clamp(-800px, -17vw, -390px), clamp(70px, 9vw, 130px));
+            pointer-events: none;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 0 20px;
+            gap: 12px;
         }
 
-        .subtitle {
-            font-size: clamp(1rem, 2vw, 1.35rem);
-            margin-top: 42px;
-            visibility: hidden;
+        /* Larger Image Preview Box */
+        .image-preview-box {
+            width: 180px;
+            height: 135px;
+            border-radius: 8px;
+            border: 2px dashed rgba(0, 255, 204, 0.5);
+            background: rgba(5, 5, 10, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            pointer-events: auto;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.25);
+            position: relative;
+        }
+
+        .image-preview-box img {
+            width: 200%;
+            height: 200%;
+            object-fit: cover;
         }
 
         .btn-proceed {
             padding: 14px 32px;
             font-size: 1rem;
-            margin-top: 18px;
-            margin-bottom: 20px;
             visibility: hidden;
             pointer-events: auto;
             cursor: pointer;
@@ -135,12 +160,36 @@
             font-weight: 800;
             border-radius: 8px;
             transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.5);
+            width: 100%;
+            max-width: 240px;
         }
 
         .btn-proceed:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 255, 204, 0.7);
+            box-shadow: 0 0 35px rgba(0, 255, 204, 0.8);
+        }
+
+        .btn-processing {
+            padding: 14px 32px;
+            font-size: 1rem;
+            display: none;
+            pointer-events: auto;
+            cursor: pointer;
+            background: linear-gradient(135deg, #38bdf8, #7c3aed);
+            border: none;
+            color: #ffffff;
+            font-weight: 800;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+            width: 100%;
+            max-width: 240px;
+        }
+
+        .btn-processing:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.8);
         }
 
         .moon-settled {
@@ -150,7 +199,7 @@
             aspect-ratio: 1/1;
             transform: translate(clamp(-240px, -24vw, -130px), clamp(40px, 6vw, 90px)) scale(calc(90vh / clamp(140px, 23vw, 320px))) rotate(-720deg) !important;
             filter: drop-shadow(0 0 110px rgba(255, 255, 255, 0.85));
-            z-index: 100;
+            z-index: 20;
         }
 
         .moon-animator {
@@ -220,18 +269,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 2;
-        }
-
-        .upload-ui-layer {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 60;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            z-index: 100;
         }
     </style>
 </head>
@@ -313,15 +351,18 @@
                 <div class="space-icon"></div>
                 <div class="space-icon"></div>
             </div>
+
+            <div class="content-overlay" id="contentOverlay">
+                <div class="image-preview-box" id="imagePreviewBox">
+                    <img id="previewImg" src="" alt="Uploaded Preview">
+                </div>
+                <button class="btn-proceed" id="uploadBtn">Upload Image & Launch</button>
+                <button class="btn-processing" id="processingBtn">Processing...</button>
+            </div>
         </div>
 
-        <p class="subtitle">Autonomous Hazard-aware lunar surface navigator and analyzer</p>
-        
-        <button class="btn-proceed" id="uploadBtn">Upload Image & Launch</button>
         <input type="file" id="imageInput" accept="image/*" style="display: none;">
     </main>
-
-    <div class="upload-ui-layer"></div>
 
     <script>
         const canvas = document.getElementById('orbit-canvas');
@@ -356,8 +397,15 @@
         const lunarSpawnDuration = 80;
         let lunarSpawnPos = { x: 0, y: 0 };
 
+        let scanBeamProgress = 0; // Fluid lerp tracker for target anchor point
+
         const uploadBtn = document.getElementById('uploadBtn');
+        const processingBtn = document.getElementById('processingBtn');
         const imageInput = document.getElementById('imageInput');
+        const imagePreviewBox = document.getElementById('imagePreviewBox');
+        const previewImg = document.getElementById('previewImg');
+
+        let isScanning = false;
 
         setTimeout(() => {
             uploadBtn.style.visibility = 'visible';
@@ -369,6 +417,14 @@
 
         imageInput.addEventListener('change', (e) => {
             if (e.target.files && e.target.files[0]) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    previewImg.src = evt.target.result;
+                    imagePreviewBox.style.display = 'flex';
+                };
+                reader.readAsDataURL(file);
+
                 uploadBtn.style.display = 'none';
                 
                 const earthRect = document.getElementById('earthWrapper').getBoundingClientRect();
@@ -391,6 +447,12 @@
                     transferProgress = 0;
                 }, 600);
             }
+        });
+
+        processingBtn.addEventListener('click', () => {
+            isScanning = true;
+            processingBtn.textContent = 'Scanning in Progress...';
+            processingBtn.style.background = 'linear-gradient(135deg, #00ffcc, #7c3aed)';
         });
 
         function renderOrbit() {
@@ -444,6 +506,7 @@
                     missionState = 'LOI_BURN';
                     setTimeout(() => {
                         missionState = 'LUNAR_ORBIT';
+                        processingBtn.style.display = 'block'; 
                     }, 500);
                     transferProgress = 1;
                 }
@@ -491,7 +554,7 @@
             else if (missionState === 'LUNAR_ORBIT') {
                 lunarOrbitAngle += 0.015;
                 const orbitRadiusX = 375;
-                const orbitRadiusY = 240;
+                const orbitRadiusY = 375;
                 satX = moonCenterX + Math.cos(lunarOrbitAngle) * orbitRadiusX;
                 satY = moonCenterY + Math.sin(lunarOrbitAngle) * orbitRadiusY;
                 scaleFactor = 1.35; 
@@ -586,6 +649,50 @@
             ctx.fill();
 
             ctx.restore();
+
+            // Extended, Fluid Scanning Beam Targetting Preview Box & Button
+            if (isScanning && missionState === 'LUNAR_ORBIT') {
+                const previewBox = document.getElementById('imagePreviewBox');
+                const targetRect = previewBox.getBoundingClientRect();
+                
+                // Target the center of the image preview box (or button if box is hidden)
+                const targetX = targetRect.left + targetRect.width / 2;
+                const targetY = targetRect.top + targetRect.height / 2;
+
+                // Smooth fluid interpolation (lerp) for target tracking so it sweeps smoothly
+                scanBeamProgress += (1 - scanBeamProgress) * 0.08;
+
+                // Draw extended beam from satellite to preview box
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(satX, satY);
+                
+                // Add a sweeping control point for fluid bezier curve arc
+                const midX = (satX + targetX) / 2 + Math.sin(lunarOrbitAngle * 3) * 30;
+                const midY = (satY + targetY) / 2 + Math.cos(lunarOrbitAngle * 3) * 30;
+                
+                ctx.quadraticCurveTo(midX, midY, targetX, targetY);
+                ctx.strokeStyle = 'rgba(0, 255, 204, 0.85)';
+                ctx.lineWidth = 2.5;
+                ctx.shadowColor = '#00ffcc';
+                ctx.shadowBlur = 12;
+                ctx.stroke();
+
+                // Draw scanner hit-point reticle on the image preview box
+                ctx.beginPath();
+                ctx.arc(targetX, targetY, 18 + Math.sin(Date.now() / 150) * 4, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(0, 255, 204, 0.9)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // Inner scanning pulse
+                ctx.beginPath();
+                ctx.arc(targetX, targetY, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff2a6d';
+                ctx.fill();
+                ctx.restore();
+            }
+
             requestAnimationFrame(renderOrbit);
         }
 
