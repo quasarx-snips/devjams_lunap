@@ -1,89 +1,85 @@
-# LunaP: Autonomous Hazard-Aware Lunar Surface Navigator
+# LunaP Backend
 
-> **LunaP uses AI to understand lunar terrain, map hazards, rank landing sites, and plan safer routes.**
+Wires your `main.py` hazard engine (U-Net + morphology) and a CLAHE
+enhancement step behind a small Flask API, so the web frontend can call
+real Python processing instead of a fake progress bar.
 
-## Overview
+## 1. Install
 
-LunaP is an autonomous, hazard-aware lunar navigation system that converts lunar optical imagery into terrain intelligence. Its AI/ML perception layer extracts terrain features and its pictures from publicly available database of lunar imagery. 
+```bash
+cd backend
+python -m venv venv
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # macOS/Linux
+pip install -r requirements.txt
+```
 
-For the hackathon, the pipeline is modular and can combine annotations, pretrained visual representations, automated terrain indicators, and lightweight learning methods instead of exhaustive manual labeling or reviewing. For each image that has been uplaoded, LunaP produces a terrain-risk representation distinguishing safer and hazardous regions. 
+## 2. Add your model
 
-A mission-planning layer uses this representation to generate routes between user-defined nodes and annotations while considering terrain risk and safety rather than distance alone. Candidate landing or staging regions are evaluated and ranked with the least risk and the safest. An interactive dashboard presents the image, terrain analysis, risk map, recommended route, landing-site ranking, and risk information. The prototype demonstrates an end-to-end workflow from terrain understanding to risk-aware planning and presentation.
+Copy `crater_unet.onnx` **and** `crater_unet.onnx.data` (the external-data
+sidecar ONNX split off) into `backend/models/`, so you have:
 
-## Problem Statement
+```
+backend/models/crater_unet.onnx
+backend/models/crater_unet.onnx.data
+```
 
-Lunar terrain contains craters, rocks, steep or rough regions, shadows, and other features and risk factors that are visually difficult to view. A rover cannot safely treat every visible region as equally traversable. Communication delay also limits dependence on continuous human intervention. 
+Both files must sit in the same folder — onnxruntime resolves the `.data`
+file by relative name next to the `.onnx` file.
 
-**LunaP addresses the problem of converting local lunar imagery into terrain-risk information that can support safer navigation and mission planning.**
+Don't want to move the files? Instead set an environment variable pointing
+at wherever they already live, e.g. on Windows:
 
-## Proposed Solution
+```powershell
+$env:CRATER_MODEL_PATH = "C:\Users\bijan\Desktop\DevJams\Module1_2_Integrated\models\crater_unet.onnx"
+```
 
-LunaP processes lunar optical imagery through a modular AI/ML perception pipeline, converts the resulting terrain information into a unified risk representation, and feeds that representation into mission-planning algorithms. 
+## 3. Run
 
-The system supports:
-*   Risk-aware route generation between user-defined waypoints.
-*   Ranking of candidate landing or staging regions.
-*   An interactive dashboard exposing the image, analysis, risk map, route, site ranking, and risk/confidence information.
+```bash
+python app.py
+```
 
-## AI/ML Approach
+You should see Flask start on `http://localhost:5000`. Sanity-check it:
 
-The project deliberately avoids claiming a fully supervised deep-learning detector when the available public imagery is not guaranteed to have exhaustive hazard labels. Instead, the perception layer is modular and can combine:
-1.  Available annotations
-2.  Pretrained visual representations
-3.  Automated terrain indicators
-4.  Lightweight learning methods
+```bash
+curl http://localhost:5000/api/health
+```
 
-This allows the prototype to demonstrate genuine ML-assisted terrain understanding without requiring the team to manually label thousands of images.
+`"model_found": true` means the ONNX model was located correctly.
 
-### Workflow
-1.  **Training/Development:** Public lunar imagery → Preprocessing → Available annotations/metadata or automated terrain indicators → Feature learning/representation → Validation → Perception component.
-2.  **Runtime:** New lunar image → Trained/pretrained perception component → Terrain features → Terrain-risk map → Risk-aware route planning + Landing-site ranking → Regions of Scientific Interests → Dashboard.
+## 4. Point the frontend at it
 
-## Data Sources
+`upload.html` and `analysis.html` both define:
 
-Primary sources identified for the prototype include:
-*   **Chandrayaan-2 Imagery:** Via the Indian Space Research Organisation/ISSDC ecosystem.
-    *   [ISSDC Chandrayaan Data Explorer](https://chmapbrowse.issdc.gov.in/)
-    *   [Kaggle — OHRC Images (Chandrayaan-2)](https://www.kaggle.com/datasets/piyushsharma5654/ohrc-images-chandaryaan-2)
-*   **Lunar Reconnaissance Orbiter (LROC):** Accessible through LROC QuickMap.
-    *   [LROC QuickMap](https://quickmap.lroc.im-ldi.com/)
-*   **NASA CGI Moon Kit:** Provides LROC-derived color and LOLA elevation products for visualization.
-    *   [NASA SVS — CGI Moon Kit](https://svs.gsfc.nasa.gov/4720)
-*   **DOORs :** Available on Zenodo. Provides boulder segmentation dataset.
-    *   [DOORS Dataset in Zenodo](https://zenodo.org/records/7107409)
-*   **Crater Binary Segmentation:** Model available on HuggingFace for identifying craters.
-    *   [Hugging Face Dataset](https://huggingface.co/datasets/gremlin97/crater_binary_segmentation)
-*  **More Datasets are being explored to solve the problem statement more efficiently.**
+```js
+const API_BASE = 'http://localhost:5000';
+```
 
-## Core System Flow
+near the top of their `<script>` blocks. Leave it as-is if you're running
+everything on one machine; change it if the backend is hosted elsewhere
+(and make sure that host allows CORS — it already does via `flask-cors`).
 
-`Dataset / public lunar imagery` → `Preprocessing` → `AI/ML perception development` → `Trained/pretrained perception component` → `New lunar image` → `Terrain perception` → `Hazard/risk representation` → `Mission planning` → `Safe route generation + Landing-site ranking` → `ROI Finding (Craters, Basins, Ridges, Boulders)` →  `Interactive mission dashboard`
+## API
 
-## Technology Stack
+| Endpoint            | Method | Body                          | Returns                                  |
+|----------------------|--------|--------------------------------|-------------------------------------------|
+| `/api/health`        | GET    | —                               | model path + whether it was found         |
+| `/api/enhance`       | POST   | `{ "image": "<data URL>" }`    | `{ success, image: "<data URL>" }` (CLAHE) |
+| `/api/hazard-map`    | POST   | `{ "image": "<data URL>" }`    | `{ success, image: "<data URL>", output_path }` |
 
-*   **Language:** Python
-*   **Image Processing:** OpenCV, NumPy
-*   **Machine Learning:** PyTorch (or another lightweight ML framework)
-*   **Optimization:** Numerical/graph-based optimization for route planning
-*   **Interface:** Streamlit for the interactive dashboard
+`/api/hazard-map` expects the **CLAHE-enhanced** image (the output of
+`/api/enhance`) as its baseline, matching your intended pipeline:
+raw upload → CLAHE baseline → hazard map.
 
-## Prototype Scope
+## Notes
 
-*   Upload and process lunar surface imagery.
-*   Generate a visual terrain/hazard representation.
-*   Allow users to specify navigation waypoints.
-*   Generate a route that accounts for terrain risk.
-*   Identify and rank promising landing/staging regions.
-*   Find suitable regions of interest.
-*   Present the complete result through a lightweight interactive dashboard.
-
-## Limitations and Honest Scope
-
-The hackathon prototype is a **research demonstrator and decision-support system**, not flight-certified rover software. 
-*   Optical imagery, lighting, shadows, image quality, and limited labelled data can affect perception accuracy.
-*   Navigation quality depends on the terrain representation produced by the perception layer.
-*   The proposal emphasizes a defensible end-to-end prototype rather than claiming flight-ready autonomy.
-
-## Expected Outcome
-
-A working proof of concept showing that lunar imagery can be transformed into terrain intelligence and then used to support autonomous mission planning. The key demonstration is: **understand the terrain, quantify risk, and choose a safer path.**
+- Tiling, ONNX inference, and morphology run exactly as written in your
+  `main.py` (unmodified) — `ProcessPoolExecutor` with 4 workers, 512px
+  tiles, 100px overlap.
+- A processed image on a laptop CPU can take anywhere from several seconds
+  to a couple of minutes depending on resolution — the frontend shows a
+  progress state while it waits.
+- Temp baseline files written to `backend/temp/` are deleted after each
+  request; final overlays accumulate in `backend/outputs/` (same
+  `_integrated_overlay.png` naming your script already uses).
