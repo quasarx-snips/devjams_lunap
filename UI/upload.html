@@ -568,11 +568,15 @@
 
             setTimeout(() => {
                 bufferingText.textContent = 'Decrypting Data...';
-            }, 10000);
+            }, 8000);
+
+            setTimeout(() => {
+                bufferingText.textContent = 'Applying CLAHE Enhancement...';
+            }, 16000);
 
             setTimeout(() => {
                 bufferingText.textContent = 'Revealing Result...';
-            }, 20000);
+            }, 24000);
 
             setTimeout(() => {
                 bufferingOverlay.style.display = 'none';
@@ -702,6 +706,18 @@
                             screenFlash.style.left = earthCenterX + 'px';
                             screenFlash.style.top = earthCenterY + 'px';
                             screenFlash.classList.add('is-flashing');
+
+                            // Hand the uploaded frame off to the analysis suite,
+                            // then continue through the white flash into analysis.html
+                            try {
+                                if (pendingImageData) {
+                                    sessionStorage.setItem('lunapImage', pendingImageData);
+                                }
+                            } catch (err) { /* storage unavailable - proceed anyway */ }
+
+                            setTimeout(() => {
+                                window.location.href = 'analysis.html';
+                            }, 950);
                         }
                     }
                     const t = returnProgress;
