@@ -280,9 +280,11 @@ def compute_terrain_3d(gray_u8, total_risk, routes=None, start=None, goal=None):
     
     # Generate pseudo-elevation based on grayscale intensity 
     # (darker areas like craters naturally map lower)
+    # Generate pseudo-elevation based on grayscale intensity 
+    # (lighter areas like peaks naturally map higher)
     z_down = cv2.resize(gray_u8, (nw, nh), interpolation=cv2.INTER_AREA).astype(np.float32)
     z_down = cv2.GaussianBlur(z_down, (5, 5), 0)
-    
+    z_down = (255.0 - z_down)*0.05 # Add this line to invert the elevation peaks/valleys
     # Setup coordinates
     x_grid, y_grid = np.meshgrid(np.linspace(0, w - 1, nw), np.linspace(0, h - 1, nh))
     
