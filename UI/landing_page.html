@@ -69,7 +69,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 10;
+            z-index: 100;
             transition: opacity 1.5s ease, transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -107,26 +107,100 @@
             letter-spacing: 0.5px;
         }
 
+        /* Updated Menu Wrapper Styles */
+        .menu-dropdown-wrapper {
+            position: relative;
+        }
+
         .menu-container {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             cursor: pointer;
             color: #fff;
-            font-size: 13px;
+            font-size: 16px;
             font-weight: 600;
+            background: rgba(168, 85, 247, 0.12);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-container:hover {
+            background: rgba(168, 85, 247, 0.22);
+            border-color: rgba(168, 85, 247, 0.6);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
         }
 
         .menu-cat {
-            width: 34px;
-            height: 34px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300ffcc"><path d="M5 3L8.5 7H15.5L19 3L21 6V11C21 16.5 17 21 12 21C7 21 3 16.5 3 11V6L5 3M8 10C7.45 10 7 10.45 7 11C7 11.55 7.45 12 8 12C8.55 12 9 11.55 9 11C9 10.45 8.55 10 8 10M16 10C15.45 10 15 10.45 15 11C15 11.55 14.5 12 16 12C16.55 12 17 11.55 17 11C17 10.45 16.55 10 16 10M12 14C10.5 14 9.5 14.8 9 15.5C9 16.2 9.8 17 10.5 17C11.1 17 11.5 16.5 12 16.5C12.5 16.5 12.9 17 13.5 17C14.2 17 15 16.2 15 15.5C14.5 14.8 13.5 14 12 14Z"/></svg>') no-repeat center;
-            filter: drop-shadow(0 0 8px rgba(0,255,204,0.7));
-            transition: transform 0.3s ease;
+            width: 36px;
+            height: 36px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23a855f7"><path d="M5 3L8.5 7H15.5L19 3L21 6V11C21 16.5 17 21 12 21C7 21 3 16.5 3 11V6L5 3M8 10C7.45 10 7 10.45 7 11C7 11.55 7.45 12 8 12C8.55 12 9 11.55 9 11C9 10.45 8.55 10 8 10M16 10C15.45 10 15 10.45 15 11C15 11.55 14.5 12 16 12C16.55 12 17 11.55 17 11C17 10.45 16.55 10 16 10M12 14C10.5 14 9.5 14.8 9 15.5C9 16.2 9.8 17 10.5 17C11.1 17 11.5 16.5 12 16.5C12.5 16.5 12.9 17 13.5 17C14.2 17 15 16.2 15 15.5C14.5 14.8 13.5 14 12 14Z"/></svg>') no-repeat center;
+            filter: drop-shadow(0 0 8px rgba(168,85,247,0.7));
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .menu-container:hover .menu-cat {
-            transform: scale(1.1) rotate(6deg);
+            animation: slowSwingCat 1.2s ease-in-out infinite;
+        }
+
+        @keyframes slowSwingCat {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-12deg); }
+            75% { transform: rotate(12deg); }
+        }
+
+        .menu-container.spin .menu-cat {
+            transform: rotate(360deg);
+        }
+
+        /* Dropdown Box Styles */
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 100%;
+            background: rgba(10, 10, 20, 0.9);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1001;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            color: #d1d5db;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+            padding-left: 20px;
         }
 
         .main-container {
@@ -227,7 +301,33 @@
         .space-icon:nth-child(3):hover { transform: translateY(65px) scale(1.2) rotate(-2deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
         .space-icon:nth-child(4):hover { transform: translateY(20px) scale(1.1) rotate(4deg); filter: drop-shadow(0 25px 50px rgba(168, 85, 247, 0.8)); z-index: 12; }
         
-        /* Jump animations for button hover */
+        /* Jump animations for button hover / Menu Hover Sway Animations */
+        @keyframes swayIcon1 {
+            0%, 100% { transform: translateY(85px) rotate(-4deg); }
+            25% { transform: translateY(75px) rotate(-9deg); }
+            75% { transform: translateY(95px) rotate(1deg); }
+        }
+        @keyframes swayIcon2 {
+            0%, 100% { transform: translateY(50px) scale(1.15) rotate(2deg); }
+            25% { transform: translateY(40px) scale(1.15) rotate(7deg); }
+            75% { transform: translateY(60px) scale(1.15) rotate(-3deg); }
+        }
+        @keyframes swayIcon3 {
+            0%, 100% { transform: translateY(85px) scale(1.1) rotate(-2deg); }
+            25% { transform: translateY(75px) scale(1.1) rotate(-7deg); }
+            75% { transform: translateY(95px) scale(1.1) rotate(3deg); }
+        }
+        @keyframes swayIcon4 {
+            0%, 100% { transform: translateY(40px) rotate(4deg); }
+            25% { transform: translateY(30px) rotate(-1deg); }
+            75% { transform: translateY(50px) rotate(9deg); }
+        }
+
+        .space-icon.swaying:nth-child(1) { animation: swayIcon1 1.8s ease-in-out infinite; }
+        .space-icon.swaying:nth-child(2) { animation: swayIcon2 2.1s ease-in-out infinite; }
+        .space-icon.swaying:nth-child(3) { animation: swayIcon3 1.6s ease-in-out infinite; }
+        .space-icon.swaying:nth-child(4) { animation: swayIcon4 2.3s ease-in-out infinite; }
+
         @keyframes jumpBounce1 {
             0%, 100% { transform: translateY(85px) scale(1) rotate(-4deg); }
             50% { transform: translateY(60px) scale(1.06) rotate(-8deg); }
@@ -341,7 +441,6 @@
             }
         }
 
-        /* Earth drops instantly with the screen shake (0s delay) */
         body.launched .hanging-earth-wrapper {
             animation: dropAndSwing 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
@@ -431,16 +530,6 @@
             box-shadow: 0 15px 40px rgba(168, 85, 247, 0.5);
         }
 
-        .btn-proceed svg {
-            width: 18px;
-            height: 18px;
-            transition: transform 0.3s ease;
-        }
-
-        .btn-proceed:hover svg {
-            transform: translateX(6px);
-        }
-
         #laser-canvas {
             position: absolute;
             top: 0;
@@ -448,7 +537,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 30;
+            z-index: 1005; /* Updated to sit above the dropdown menu (1001) */
             transition: opacity 1s ease;
         }
 
@@ -504,9 +593,17 @@
                 <span class="gdg-sub">DevJams'26 • Gravitas • GDG</span>
             </div>
         </a>
-        <div class="menu-container">
-            <span>Menu</span>
-            <div class="menu-cat"></div>
+        <div class="menu-dropdown-wrapper" id="menuWrapper">
+            <div class="menu-container" id="menuBtn">
+                <span>Menu</span>
+                <div class="menu-cat"></div>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="index.html" target="_blank" class="dropdown-item">Home</a>
+                <a href="team.html" target="_blank" class="dropdown-item">About Team</a>
+                <a href="repo.html" target="_blank" class="dropdown-item">Repository</a>
+                <a href="docs.html" target="_blank" class="dropdown-item">Documentation</a>
+            </div>
         </div>
     </header>
 
@@ -620,10 +717,6 @@
 
         <button class="btn-proceed" id="proceed-btn" onclick="triggerLaunchSequence()">
             Proceed further
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 12H19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
         </button>
 
     </main>
@@ -640,13 +733,43 @@
             updateTrackingSensors();
         });
 
+        // Dropdown Toggle Logic with Simultaneous Cat Icon Spin
+        const menuBtn = document.getElementById('menuBtn');
+        const menuWrapper = document.getElementById('menuWrapper');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const spaceIcons = document.querySelectorAll('.space-icon');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+            menuBtn.classList.toggle('spin');
+        });
+
+        // Menu Hover Sway Trigger
+        menuWrapper.addEventListener('mouseenter', () => {
+            if (isLaunched) return;
+            spaceIcons.forEach(icon => icon.classList.add('swaying'));
+        });
+
+        menuWrapper.addEventListener('mouseleave', () => {
+            if (isLaunched) return;
+            spaceIcons.forEach(icon => icon.classList.remove('swaying'));
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', () => {
+            if (dropdownMenu.classList.contains('show')) {
+                dropdownMenu.classList.remove('show');
+                menuBtn.classList.remove('spin');
+            }
+        });
+
         const roverLeftPupil = document.getElementById('left-pupil');
         const roverRightPupil = document.getElementById('right-pupil');
 
         const canvas = document.getElementById('laser-canvas');
         const ctx = canvas.getContext('2d');
         const proceedBtn = document.getElementById('proceed-btn');
-        const spaceIcons = document.querySelectorAll('.space-icon');
 
         proceedBtn.addEventListener('mouseenter', () => {
             if (isLaunched) return;
@@ -695,7 +818,16 @@
             const btnCenterY = btnRect.top + btnRect.height / 2;
             const distToBtn = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
 
-            const isNearButton = distToBtn < 150 || (mouseX >= btnRect.left - 50 && mouseX <= btnRect.right + 50 && mouseY >= btnRect.top - 50 && mouseY <= btnRect.bottom + 50);
+            const menuRect = menuBtn.getBoundingClientRect();
+            const isNearMenu = (mouseX >= menuRect.left - 30 && mouseX <= menuRect.right + 30 && mouseY >= menuRect.top - 30 && mouseY <= menuRect.bottom + 30);
+            
+            let isNearDropdown = false;
+            if (dropdownMenu.classList.contains('show')) {
+                const dropRect = dropdownMenu.getBoundingClientRect();
+                isNearDropdown = (mouseX >= dropRect.left - 20 && mouseX <= dropRect.right + 20 && mouseY >= dropRect.top - 20 && mouseY <= dropRect.bottom + 20);
+            }
+
+            const isNearButton = distToBtn < 150 || (mouseX >= btnRect.left - 50 && mouseX <= btnRect.right + 50 && mouseY >= btnRect.top - 50 && mouseY <= btnRect.bottom + 50) || isNearMenu || isNearDropdown;
             
             const laserColor = isNearButton ? '#00ffcc' : '#ff2a6d';
 
@@ -744,12 +876,11 @@
             isLaunched = true;
 
             spaceIcons.forEach(icon => {
-                icon.classList.remove('jumping');
+                icon.classList.remove('swaying', 'jumping');
             });
 
             document.body.classList.add('launched');
 
-            // Timeout reduced to 3500ms so it transitions instantly when the Earth animation settles
             setTimeout(() => {
                 window.location.href = 'upload.html';
             }, 3500);
